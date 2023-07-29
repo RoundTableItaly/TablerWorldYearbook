@@ -9,6 +9,7 @@ python-dotenv = "*"
 requests = "*"
 pandas = "*"
 openpyxl = "*"
+phonenumbers = "*"
 
 [dev-packages]
 

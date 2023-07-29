@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "eaeb076f76703c1e74b22c5ddefb022aa5e5fc0c926390bd87864a8500c65b29"
+            "sha256": "ba1ff95e59ebe56c8669a1a22886a8ead0a2ecdf5a46f489174d1aac5cc4e224"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -205,6 +205,14 @@
             ],
             "markers": "sys_platform == 'win32'",
             "version": "==2023.2.7"
+        },
+        "phonenumbers": {
+            "hashes": [
+                "sha256:89671217c706cbaa3ced101deefafa779836feac3e059434d886ac31f09f32c0",
+                "sha256:e8ffd86b2e0b844fd6189fdb0927dbe8707cb03b59102cba5532b3ea305cc1bd"
+            ],
+            "index": "pypi",
+            "version": "==8.13.17"
         },
         "pyinstaller": {
             "hashes": [
