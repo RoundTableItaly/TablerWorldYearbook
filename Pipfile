@@ -7,6 +7,8 @@ name = "pypi"
 pyinstaller = "*"
 python-dotenv = "*"
 requests = "*"
+pandas = "*"
+openpyxl = "*"
 
 [dev-packages]
 

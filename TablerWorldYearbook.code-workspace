@@ -1,12 +1,10 @@
 {
-	"folders": [
-		{
-			"path": "."
-		}
-	],
-	"settings": {
-		"python.formatting.blackArgs": [
-			"--line-length 120"
-		]
-	}
+    "folders": [
+        {
+            "path": "."
+        }
+    ],
+    "settings": {
+        "python.formatting.blackArgs": ["--line-length=120"]
+    }
 }

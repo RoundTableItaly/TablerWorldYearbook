@@ -1,11 +1,10 @@
 import os
 import requests
 import logging
-import json
 from dotenv import load_dotenv
 
 
-def main():
+def contacts():
     load_dotenv()
     logger = logging.getLogger()
     handler = logging.StreamHandler()
@@ -20,7 +19,7 @@ def main():
         "Authorization": "Token {}".format(API_KEY),  # Add Peepl token
     }
 
-    def contacts():
+    def contacts_step():
         session = requests.Session()
 
         url = f"{API_BASE_URL}/contacts/"
@@ -33,9 +32,7 @@ def main():
         while get_next_page(next_page) is not None:
             try:
                 next_page_url = next_page.json()["next"]
-                next_page = session.get(
-                    next_page_url, params=querystring, headers=API_AUTH_HEADER
-                )
+                next_page = session.get(next_page_url, params=querystring, headers=API_AUTH_HEADER)
                 yield next_page
 
             except KeyError:
@@ -47,14 +44,9 @@ def main():
 
     # Iterate through pages
     results = []
-    for index, page in enumerate(contacts()):
-        results.append(page.json()["results"])
+    for index, page in enumerate(contacts_step()):
+        results.extend(page.json()["results"])
         records = len(page.json()["results"])
         print(f"request {index} - records {records} - status {page.status_code}")
 
-    with open("json_data.json", "w") as outfile:
-        json.dump(results, outfile)
-
-
-if __name__ == "__main__":
-    main()
+    return results
