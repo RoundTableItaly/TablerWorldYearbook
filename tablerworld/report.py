@@ -26,6 +26,19 @@ def report(df):
         .copy()
     )
 
+    def fun_clubs(x):
+        d = {}
+        d["clubs"] = x[["rt_club_name", "rt_club_subdomain", "rt_club_number"]].to_dict(orient="records")
+        return pd.Series(d, index=["clubs"])
+
+    clubs_in_areas = (
+        df[["rt_area_name", "rt_area_subdomain", "rt_club_name", "rt_club_subdomain", "rt_club_number"]]
+        .drop_duplicates(ignore_index=True)
+        .groupby(["rt_area_name", "rt_area_subdomain"])
+        .apply(fun_clubs)
+        .reset_index()
+    )
+
     # Jinja
     env = Environment(
         loader=PackageLoader("tablerworld"),
@@ -34,7 +47,7 @@ def report(df):
 
     # HTML
     template = env.get_template("report/report.html")
-    template_rendered = template.render(pd=pd, df=df, areas=areas, clubs=clubs)
+    template_rendered = template.render(pd=pd, df=df, areas=areas, clubs=clubs, clubs_in_areas=clubs_in_areas)
     # HTML write to file
     with open(OUTPUT_HTML, "wb") as f:
         f.write(template_rendered.encode("utf-8"))

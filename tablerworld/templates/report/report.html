@@ -36,21 +36,27 @@
         <article id="skills">
             <h2 id="skills-title">Tablers</h2>
 
-            {% for index, club in clubs.iterrows() %}
-            <section id="clubs">
-                <h3 id="{{ club.rt_club_subdomain }}">{{club.rt_club_name}}</h3>
-                {% for index, row in df.loc[df["rt_club_number"] == club.rt_club_number].sort_values(by="last_name").iterrows() %}
-                <section id="row-{{index}}">
-                    <p>
-                        <strong>{{ row.last_name|upper }} {{ row.first_name }}</strong>
-                        ({{ row.birth_date.strftime('%d/%m/%Y') if pd.isnull(row.birth_date) is false }})
-                        <em>{{row.name_partner}}</em><br />
+            {% for index, area in clubs_in_areas.iterrows() %}
+            <section class="areas">
+                <h3 id="{{ area.rt_area_subdomain }}">{{ area.rt_area_name }}</h3>
 
-                        {{ row.job }}<br />
-                        {{ row.address }}<br />
-                        <strong>{{ row.phonenumbers }}</strong><br />
-                        {{ row.email }}<br />
-                    </p>
+                {% for club in area.clubs|sort(attribute='rt_club_number') %}
+                <section class="clubs">
+                    <h4 id="{{ club.rt_club_subdomain }}">{{ club.rt_club_name }}</h4>
+                    {% for index, row in df.loc[df["rt_club_number"] == club.rt_club_number].sort_values(by="last_name").iterrows() %}
+                    <section id="row-{{index}}">
+                        <p>
+                            <strong>{{ row.last_name|upper }} {{ row.first_name }}</strong>
+                            ({{ row.birth_date.strftime('%d/%m/%Y') if pd.isnull(row.birth_date) is false }})
+                            <em>{{row.name_partner}}</em><br />
+
+                            {{ row.job }}<br />
+                            {{ row.address }}<br />
+                            <strong>{{ row.phonenumbers }}</strong><br />
+                            {{ row.email }}<br />
+                        </p>
+                    </section>
+                    {% endfor %}
                 </section>
                 {% endfor %}
             </section>
