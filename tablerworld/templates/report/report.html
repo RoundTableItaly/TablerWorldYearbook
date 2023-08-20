@@ -1,0 +1,64 @@
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <link href="report.css" rel="stylesheet" />
+        <title>Report</title>
+        <meta name="description" content="Report example" />
+    </head>
+
+    <body>
+        <article id="cover">
+            <h1>Report Annuario Round Table Italia 2023/2024</h1>
+            <address>
+                <strong>Riccardo Dal Fiume</strong>
+                Editore Nazionale
+            </address>
+            <address>editore@roundtable.it https://www.roundtable.it</address>
+        </article>
+
+        <article id="contents">
+            <h2>Contenuti</h2>
+            <h3>Zone</h3>
+            <ul>
+                {% for index, area in areas.iterrows() %}
+                <li><a href="#{{ area.rt_area_subdomain }}"></a></li>
+                {% endfor %}
+            </ul>
+
+            <h3>Tavole</h3>
+            <ul>
+                {% for index, club in clubs.iterrows() %}
+                <li><a href="#{{ club.rt_club_subdomain }}"></a></li>
+                {% endfor %}
+            </ul>
+        </article>
+
+        <article id="skills">
+            <h2 id="skills-title">Tablers</h2>
+
+            {% for index, club in clubs.iterrows() %}
+            <section id="clubs">
+                <h3 id="{{ club.rt_club_subdomain }}">{{club.rt_club_name}}</h3>
+                {% for index, row in df.loc[df["rt_club_number"] == club.rt_club_number].sort_values(by="last_name").iterrows() %}
+                <section id="row-{{index}}">
+                    <p>
+                        <strong>{{ row.last_name|upper }} {{ row.first_name }}</strong>
+                        ({{ row.birth_date.strftime('%d/%m/%Y') if pd.isnull(row.birth_date) is false }})
+                        <em>{{row.name_partner}}</em><br />
+
+                        {{ row.job }}<br />
+                        {{ row.address }}<br />
+                        <strong>{{ row.phonenumbers }}</strong><br />
+                        {{ row.email }}<br />
+                    </p>
+                </section>
+                {% endfor %}
+            </section>
+            {% endfor %}
+        </article>
+
+        <article id="chapter">
+            <h2 id="chapter-title">Fine report</h2>
+        </article>
+    </body>
+</html>

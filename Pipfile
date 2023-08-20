@@ -10,6 +10,8 @@ requests = "*"
 pandas = "*"
 openpyxl = "*"
 phonenumbers = "*"
+weasyprint = "*"
+jinja2 = "*"
 
 [dev-packages]
 
