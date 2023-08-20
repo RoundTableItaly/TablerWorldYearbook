@@ -1,12 +1,13 @@
 import tablerworld.download
 import tablerworld.contacts
+import tablerworld.report
 import json
 import os
 import pandas as pd
 
 
-FILE_CONTACTS_JSON = "data_contacts.json"
-FILE_CONTACTS_EXCEL = "data_contacts.xlsx"
+FILE_CONTACTS_JSON = "dist/data_contacts.json"
+FILE_CONTACTS_EXCEL = "dist/data_contacts.xlsx"
 
 
 def main():
@@ -27,6 +28,9 @@ def main():
 
     # Save excel file
     df.to_excel(FILE_CONTACTS_EXCEL, sheet_name="contacts", index=False)
+
+    # Generate report
+    tablerworld.report.report(df)
 
 
 if __name__ == "__main__":
