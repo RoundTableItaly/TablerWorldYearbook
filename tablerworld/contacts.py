@@ -58,10 +58,8 @@ def clean(df):
         if not cell:
             return ""
 
-        # member_info = filter(lambda x: x.name == "Member Info", cell)
-        # name_partner = filter(lambda x: x.key == "Name partner", member_info.rows)
         member_info = [x for x in cell if x.get("name") == "Member Info"]
-        if (not member_info):
+        if not member_info:
             return ""
 
         name_partner = [x for x in member_info[0].get("rows") if x.get("key") == "Name partner"]
