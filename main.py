@@ -29,6 +29,9 @@ def main():
     # Save excel file
     df.to_excel(FILE_CONTACTS_EXCEL, sheet_name="contacts", index=False)
 
+    # Download profile pictures
+    # tablerworld.download.profile_pictures(df)
+
     # Generate report
     tablerworld.report.report(df)
 
