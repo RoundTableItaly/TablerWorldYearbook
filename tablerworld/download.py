@@ -67,7 +67,7 @@ def profile_pictures(df):
         while True:
             try:
                 item = q.get()
-                id = f"rt{item['rt_club_number']:02} - {item['last_name']} {item['first_name']}"
+                id = f"rt{item['rt_club_number']:02}_{item['last_name'].replace(' ', '')}_{item['first_name'].replace(' ', '')}"
                 print(f"Started  {id}")
 
                 r = requests.get(item["profile_pic"])
