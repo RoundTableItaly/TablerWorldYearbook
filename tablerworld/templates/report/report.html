@@ -13,7 +13,10 @@
                 <strong>Riccardo Dal Fiume</strong>
                 Editore Nazionale
             </address>
-            <address>editore@roundtable.it https://www.roundtable.it</address>
+            <address>
+                <strong>editore@roundtable.it</strong>
+                https://www.roundtable.it
+            </address>
         </article>
 
         <article id="contents">
@@ -44,17 +47,24 @@
                 <section class="clubs">
                     <h4 id="{{ club.rt_club_subdomain }}">{{ club.rt_club_name }}</h4>
                     {% for index, row in df.loc[df["rt_club_number"] == club.rt_club_number].sort_values(by="last_name").iterrows() %}
-                    <section id="row-{{index}}">
-                        <p>
+                    <section class="tabler" id="row-{{index}}">
+                        <div>
+                            {% if row.profile_pic %}
+                            <img class="profilePic" src="./profile_pics/{{ row.profile_pic_file }}" />
+                            {% else %}
+                            <div class="profilePicPlaceholder"></div>
+                            {% endif %}
+                        </div>
+                        <div>
                             <strong>{{ row.last_name|upper }} {{ row.first_name }}</strong>
-                            ({{ row.birth_date.strftime('%d/%m/%Y') if pd.isnull(row.birth_date) is false }})
+                            {{ "({})".format(row.birth_date.strftime('%d/%m/%Y')) if pd.isnull(row.birth_date) is false }}
                             <em>{{row.name_partner}}</em><br />
 
                             {{ row.job }}<br />
                             {{ row.address }}<br />
                             <strong>{{ row.phonenumbers }}</strong><br />
                             {{ row.email }}<br />
-                        </p>
+                        </div>
                     </section>
                     {% endfor %}
                 </section>

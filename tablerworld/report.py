@@ -1,15 +1,16 @@
 import os
+from pathlib import Path
 from jinja2 import Environment, PackageLoader, select_autoescape
 from weasyprint import HTML, CSS
 from weasyprint.text.fonts import FontConfiguration
 import pandas as pd
 
-MODULE_PATH = os.path.dirname(__file__)
-TEMPLATE_HTML = os.path.join(MODULE_PATH, "templates/report/report.html")
-TEMPLATE_CSS = os.path.join(MODULE_PATH, "templates/report/report.css")
 
-OUTPUT_PDF = "dist/report.pdf"
-OUTPUT_HTML = "dist/report.html"
+MODULE_PATH = os.path.dirname(__file__)
+TEMPLATE_CSS = os.path.join(MODULE_PATH, "templates", "report", "report.css")
+
+OUTPUT_PDF = os.path.join(Path(MODULE_PATH).parent, "dist", "report.pdf")
+OUTPUT_HTML = os.path.join(Path(MODULE_PATH).parent, "dist", "report.html")
 
 
 def report(df):
@@ -43,6 +44,8 @@ def report(df):
     env = Environment(
         loader=PackageLoader("tablerworld"),
         autoescape=select_autoescape(),
+        trim_blocks=True,
+        lstrip_blocks=True,
     )
 
     # HTML
@@ -53,7 +56,8 @@ def report(df):
         f.write(template_rendered.encode("utf-8"))
 
     # Weasy print
-    html = HTML(string=template_rendered)
+    base_url = Path(OUTPUT_HTML).parent
+    html = HTML(filename=OUTPUT_HTML, base_url=str(base_url))
     font_config = FontConfiguration()
     css = CSS(filename=TEMPLATE_CSS, font_config=font_config)
 

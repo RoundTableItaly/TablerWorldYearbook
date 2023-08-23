@@ -1,23 +1,12 @@
 import os
 import requests
-import logging
-from dotenv import load_dotenv
 import pandas as pd
 import threading
 import queue
-import requests
 import traceback
 
 
 def contacts():
-    load_dotenv()
-    logger = logging.getLogger()
-    handler = logging.StreamHandler()
-    formatter = logging.Formatter("%(asctime)s %(name)-12s %(levelname)-8s %(message)s")
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-    logger.setLevel(logging.DEBUG)
-
     API_BASE_URL = os.getenv("API_BASE_URL")
     API_KEY = os.getenv("API_KEY")
     API_AUTH_HEADER = {
@@ -67,11 +56,11 @@ def profile_pictures(df):
         while True:
             try:
                 item = q.get()
-                id = f"rt{item['rt_club_number']:02}_{item['last_name'].replace(' ', '')}_{item['first_name'].replace(' ', '')}"
+                id = item["profile_pic_file"]
                 print(f"Started  {id}")
 
                 r = requests.get(item["profile_pic"])
-                with open(f"dist/profile_pics/{id}.jpg", "wb") as f:
+                with open(f"dist/profile_pics/{id}", "wb") as f:
                     f.write(r.content)
 
             except Exception:

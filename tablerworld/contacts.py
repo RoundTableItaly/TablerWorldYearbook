@@ -31,16 +31,24 @@ def clean(df):
         phone_international = phonenumbers.format_number(phone_parsed, phonenumbers.PhoneNumberFormat.INTERNATIONAL)
         return phone_international
 
+    def email(cell):
+        return str(cell).lower()
+
     def clean_address(cell):
         if not cell:
             return "-"
 
         item = cell[0]
 
-        street1 = item.get("street1", None)
-        street2 = item.get("street2", None)
-        postal_code = item.get("postal_code", None)
-        city = item.get("city", None)
+        street1 = item.get("street1")
+        # street2 = item.get("street2")
+        postal_code = item.get("postal_code")
+        city = item.get("city")
+
+        street1 = str(street1).title()
+        # street2 = str(street2).title()
+        postal_code = str(postal_code).title()
+        city = str(city).title()
 
         return f"{street1} - {postal_code} {city}"
 
@@ -68,9 +76,13 @@ def clean(df):
 
         return name_partner[0].get("value")
 
+    def profile_pic_file(df):
+        return f"rt{df['rt_club_number']:02}_{df['last_name'].replace(' ', '')}_{df['first_name'].replace(' ', '')}.jpg"
+
     df["first_name"] = df["first_name"].apply(clean_name)
     df["last_name"] = df["last_name"].apply(clean_name)
     df["phonenumbers"] = df["phonenumbers"].apply(clean_phonenumbers)
+    df["email"] = df["email"].apply(email)
     df["address"] = df["address"].apply(clean_address)
     df["job"] = df["companies"].apply(clean_companies)
     df["name_partner"] = df["custom_fields"].apply(name_partner)
@@ -81,5 +93,8 @@ def clean(df):
     # Convert types
     df["rt_club_number"] = df["rt_club_number"].astype("int")
     df["birth_date"] = pd.to_datetime(df["birth_date"])
+
+    # Create utility columns
+    df["profile_pic_file"] = df.apply(profile_pic_file, axis=1)
 
     return df

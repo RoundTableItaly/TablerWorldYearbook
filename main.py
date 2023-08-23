@@ -1,6 +1,8 @@
 import tablerworld.download
 import tablerworld.contacts
 import tablerworld.report
+from dotenv import load_dotenv
+import logging
 import json
 import os
 import pandas as pd
@@ -11,6 +13,14 @@ FILE_CONTACTS_EXCEL = "dist/data_contacts.xlsx"
 
 
 def main():
+    load_dotenv()
+    logger = logging.getLogger()
+    handler = logging.StreamHandler()
+    formatter = logging.Formatter("%(asctime)s %(name)-12s %(levelname)-8s %(message)s")
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+    logger.setLevel(logging.INFO)
+
     # Download contacts if not available
     if not os.path.isfile(FILE_CONTACTS_JSON):
         contacts = tablerworld.download.contacts()
