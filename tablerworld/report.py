@@ -1,8 +1,7 @@
 import os
 from pathlib import Path
 from jinja2 import Environment, PackageLoader, select_autoescape
-from weasyprint import HTML, CSS
-from weasyprint.text.fonts import FontConfiguration
+import weasyprint
 import pandas as pd
 
 
@@ -56,9 +55,12 @@ def report(df):
         f.write(template_rendered.encode("utf-8"))
 
     # Weasy print
+    weasyprint.DEFAULT_OPTIONS["dpi"] = 200
+    weasyprint.DEFAULT_OPTIONS["presentational_hints"] = True
+
     base_url = Path(OUTPUT_HTML).parent
-    html = HTML(filename=OUTPUT_HTML, base_url=str(base_url))
-    font_config = FontConfiguration()
-    css = CSS(filename=TEMPLATE_CSS, font_config=font_config)
+    html = weasyprint.HTML(filename=OUTPUT_HTML, base_url=str(base_url))
+    font_config = weasyprint.text.fonts.FontConfiguration()
+    css = weasyprint.CSS(filename=TEMPLATE_CSS, font_config=font_config)
 
     html.write_pdf(OUTPUT_PDF, stylesheets=[css], font_config=font_config)
