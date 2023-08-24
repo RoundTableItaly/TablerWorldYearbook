@@ -39,6 +39,11 @@ def report(df):
         .reset_index()
     )
 
+    def get_position_in_club(club_number, position):
+        return df.loc[
+            (df["rt_club_number"] == club_number) & (df["rt_global_positions_club"].apply(lambda x: position in x))
+        ].to_dict(orient="records")
+
     # Jinja
     env = Environment(
         loader=PackageLoader("tablerworld"),
@@ -49,7 +54,14 @@ def report(df):
 
     # HTML
     template = env.get_template("report/report.html")
-    template_rendered = template.render(pd=pd, df=df, areas=areas, clubs=clubs, clubs_in_areas=clubs_in_areas)
+    template_rendered = template.render(
+        pd=pd,
+        df=df,
+        areas=areas,
+        clubs=clubs,
+        clubs_in_areas=clubs_in_areas,
+        get_position_in_club=get_position_in_club,
+    )
     # HTML write to file
     with open(OUTPUT_HTML, "wb") as f:
         f.write(template_rendered.encode("utf-8"))

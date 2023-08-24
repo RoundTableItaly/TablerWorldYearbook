@@ -246,6 +246,7 @@ h4 {
   margin: 0 -3cm 1cm;
   padding: 1cm 1cm 1cm 3cm;
   width: 21cm;
+  text-align: center;
 }
 
 #skills h4 {
@@ -268,21 +269,72 @@ h4 {
   page-break-before: always;
 }
 
-.tabler {
+.club-frontpage {
   display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+  break-after: always;
 }
 
-.profilePicPlaceholder {
+.club-item {
+  flex: 0 0 100%;
+  margin-bottom: 1cm;
+}
+
+.club-item-logo {
+  flex: 0 0 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1cm;
+}
+
+.club-logo-placeholder {
   background: #eee;
+  height: 4.5cm;
+  width: 4.5cm;
+  content: '';
+}
+
+.not-derived-from-tw {
+  z-index: 1;
+  background-color: #F2F2F2;
+}
+
+.bg-text {
+  z-index: 0;
+  position: absolute;
+  top: 5.6cm;
+  left: 4cm;
+  color: #f6d6d6;
+  font-size: 60px;
+  transform: rotate(315deg);
+  -webkit-transform: rotate(315deg);
+}
+
+.tabler {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  width: 100%;
+}
+
+.tabler-desc {
+  flex-grow: 1;
+  padding-right: .4cm;
+}
+
+.profile-pic {
   display: inline-block;
   height: 3cm;
   width: 3cm;
-  content: '';
   margin-right: .5cm;
   vertical-align: middle;
 }
 
-.profilePic {
+.profile-pic-placeholder {
+  background: #eee;
   display: inline-block;
   height: 3cm;
   width: 3cm;

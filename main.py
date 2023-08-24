@@ -19,7 +19,7 @@ def main():
     formatter = logging.Formatter("%(asctime)s %(name)-12s %(levelname)-8s %(message)s")
     handler.setFormatter(formatter)
     logger.addHandler(handler)
-    logger.setLevel(logging.INFO)
+    logger.setLevel(logging.WARN)
 
     # Download contacts if not available
     if not os.path.isfile(FILE_CONTACTS_JSON):
