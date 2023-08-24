@@ -1,5 +1,6 @@
 import pandas as pd
 import phonenumbers
+from datetime import datetime
 
 
 def clean(df):
@@ -79,6 +80,102 @@ def clean(df):
     def profile_pic_file(df):
         return f"rt{df['rt_club_number']:02}_{df['last_name'].replace(' ', '')}_{df['first_name'].replace(' ', '')}.jpg"
 
+    def rt_global_positions_current(cell):
+        def is_current(x):
+            end_date = x.get("end_date")
+            if end_date is None:
+                return True
+            elif datetime.strptime(end_date, "%Y-%m-%d").date() > datetime.now().date():
+                return True
+            else:
+                return False
+
+        current_positions = [x for x in cell if is_current(x)]
+        return current_positions
+
+    def rt_global_positions_relevant(cell):
+        RELEVANT_POSITIONS = [
+            "Members / Member",
+            "Members / Honorary Member",
+            "Past Members / Past Member",
+            "Board / Past-President",
+            "Board / President",
+            "Board / Vice-President",
+            "Board / Secretary",
+            "Board / Treasurer",
+            "Board Assistants / C.S.O.",
+            "Board / I.R.O.",
+            "Board / P.R.O.",
+            "Board Assistants / Webmaster",
+        ]
+
+        def is_relevant(x):
+            short_description = x.get("combination").get("short_description")
+            position = short_description.rsplit(sep=" › ")
+            position = position[-1]
+            return position in RELEVANT_POSITIONS
+
+        positions = [x for x in cell if is_relevant(x)]
+        return positions
+
+    def rt_global_positions_national(cell):
+        res = []
+
+        for x in cell:
+            short_description = x.get("combination").get("short_description")
+            position = short_description.rsplit(sep=" › ")
+
+            if len(position) == 7:
+                # It'a Club position
+                continue
+            elif len(position) == 5:
+                # It's an Area position
+                continue
+            elif len(position) == 3:
+                # It's a National position
+                res.append(position[-1])
+
+        return res
+
+    def rt_global_positions_area(cell):
+        res = []
+
+        for x in cell:
+            short_description = x.get("combination").get("short_description")
+            position = short_description.rsplit(sep=" › ")
+
+            if len(position) == 7:
+                # It'a Club position
+                continue
+            elif len(position) == 5:
+                # It's an Area position
+                res.append(position[-1])
+            elif len(position) == 3:
+                # It's a National position
+                continue
+
+        return res
+
+    def rt_global_positions_club(cell):
+        res = []
+
+        for x in cell:
+            short_description = x.get("combination").get("short_description")
+            position = short_description.rsplit(sep=" › ")
+
+            if len(position) == 7:
+                # It'a Club position
+                res.append(position[-1])
+            elif len(position) == 5:
+                # It's an Area position
+                continue
+            elif len(position) == 3:
+                # It's a National position
+                continue
+
+        return res
+
+    # Apply
     df["first_name"] = df["first_name"].apply(clean_name)
     df["last_name"] = df["last_name"].apply(clean_name)
     df["phonenumbers"] = df["phonenumbers"].apply(clean_phonenumbers)
@@ -86,9 +183,20 @@ def clean(df):
     df["address"] = df["address"].apply(clean_address)
     df["job"] = df["companies"].apply(clean_companies)
     df["name_partner"] = df["custom_fields"].apply(name_partner)
+    df["rt_global_positions"] = df["rt_global_positions"].apply(rt_global_positions_current)
+    df["rt_global_positions"] = df["rt_global_positions"].apply(rt_global_positions_relevant)
+    df["rt_global_positions_national"] = df["rt_global_positions"].apply(rt_global_positions_national)
+    df["rt_global_positions_area"] = df["rt_global_positions"].apply(rt_global_positions_area)
+    df["rt_global_positions_club"] = df["rt_global_positions"].apply(rt_global_positions_club)
 
     # Clean dirty rows
     df.drop(df[df["rt_club_number"].isnull()].index, inplace=True)
+    df.drop(df[df["rt_club_number"] == 20].index, inplace=True)
+
+    # Remove members expelled, resigned or without relevant positions
+    df.drop(df[df["rt_status"] == "resigned"].index, inplace=True)
+    df.drop(df[df["rt_status"] == "expulsed"].index, inplace=True)
+    df = df[~df["rt_global_positions"].str.len().eq(0)].copy()
 
     # Convert types
     df["rt_club_number"] = df["rt_club_number"].astype("int")
