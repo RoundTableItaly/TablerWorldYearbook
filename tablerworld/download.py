@@ -1,9 +1,18 @@
 import os
+from pathlib import Path, PurePath
+import shutil
 import requests
 import pandas as pd
 import threading
 import queue
 import traceback
+
+MODULE_PATH = Path(__file__).parent
+DIST_FOLDER = PurePath.joinpath(Path(MODULE_PATH).parent, "dist")
+PROFILE_PICS_FOLDER = PurePath.joinpath(DIST_FOLDER, "profile_pics")
+
+LINE_UP = "\033[1A"
+LINE_CLEAR = "\x1b[2K"
 
 
 def contacts():
@@ -12,6 +21,8 @@ def contacts():
     API_AUTH_HEADER = {
         "Authorization": "Token {}".format(API_KEY),  # Add Peepl token
     }
+
+    print("Contacts download STARTED")
 
     def contacts_step():
         session = requests.Session()
@@ -43,24 +54,32 @@ def contacts():
         records = len(page.json()["results"])
         print(f"request {index} - records {records} - status {page.status_code}")
 
+    print("Contacts download ENDED")
     return results
 
 
 def profile_pictures(df):
+    print("Profile pictures download STARTED\n")
+    # Prepare folder
+    shutil.rmtree(PROFILE_PICS_FOLDER, ignore_errors=True)
+    os.makedirs(PROFILE_PICS_FOLDER, exist_ok=True)
+
+    # Prepare dataframe
     df_pictures = df.dropna(subset=["profile_pic"])
 
     q = queue.Queue()
 
     def worker():
-        # print(f"Started thread: {threading.current_thread().name}")
         while True:
             try:
                 item = q.get()
                 id = item["profile_pic_file"]
-                print(f"Started  {id}")
+
+                print(LINE_UP, end=LINE_CLEAR)
+                print(f"Download profile_pic {id}")
 
                 r = requests.get(item["profile_pic"])
-                with open(f"dist/profile_pics/{id}", "wb") as f:
+                with open(PurePath.joinpath(PROFILE_PICS_FOLDER, id), "wb") as f:
                     f.write(r.content)
 
             except Exception:
@@ -72,7 +91,6 @@ def profile_pictures(df):
                         continue
                     q.task_done()
 
-            print(f"Finished {id}")
             q.task_done()
 
     # Turn-on the worker threads
@@ -85,6 +103,7 @@ def profile_pictures(df):
 
     # Block until all tasks are done.
     q.join()
-    print("All work completed")
+    print(LINE_UP, end=LINE_CLEAR)
+    print("Profile pictures download ENDED")
 
     return
