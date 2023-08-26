@@ -243,7 +243,7 @@ h4 {
 
 #skills h3 {
   background: #fbc847;
-  margin: 0 -3cm 1cm;
+  margin: 0 -3cm .5cm;
   padding: 1cm 1cm 1cm 3cm;
   width: 21cm;
   text-align: center;
@@ -253,12 +253,17 @@ h4 {
   margin: 0;
 }
 
-#skills section {
-  padding: .5cm 0;
+#skills h5 {
+  margin-top: .5cm;
+  margin-bottom: .4cm;
 }
 
 #skills section p {
   margin-top: 0;
+}
+
+.area-desc h5 {
+  page-break-before: always;
 }
 
 .areas {
@@ -318,6 +323,8 @@ h4 {
   flex-direction: row;
   align-items: stretch;
   width: 100%;
+  padding-top: .1cm;
+  padding-bottom: .1cm;
 }
 
 .tabler-desc {
