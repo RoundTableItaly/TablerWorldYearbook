@@ -134,7 +134,6 @@ h4 {
 }
 
 h2 {
-  break-before: always;
   font-size: 28pt;
   string-set: heading content();
 }
@@ -176,7 +175,7 @@ h4 {
 #contents h2 {
   font-size: 20pt;
   font-weight: 400;
-  margin-bottom: 3cm;
+  margin-bottom: 1.5cm;
 }
 
 #contents h3 {

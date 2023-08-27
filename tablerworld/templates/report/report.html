@@ -94,10 +94,9 @@
         {%- endmacro %}
 
         <article id="skills">
-            <h2 id="skills-title">Elenco zone e tavole</h2>
-
             {% for index, area in clubs_in_areas.iterrows() %}
             <section class="areas">
+                <!-- Area frontpage -->
                 <h3 id="{{ area.rt_area_subdomain }}">Round Table {{ area.rt_area_name }}</h3>
                 {{ m_area(area)}}
 
