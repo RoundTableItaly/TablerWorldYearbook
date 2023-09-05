@@ -97,6 +97,7 @@ def clean(df):
         RELEVANT_POSITIONS = [
             "Members / Member",
             "Members / Honorary Member",
+            "VIP / Honorary Member",
             "Past Members / Past Member",
             "Board / Past-President",
             "Board / President",
