@@ -21,9 +21,11 @@ def main():
     logger.addHandler(handler)
     logger.setLevel(logging.WARN)
 
-    ALWAYS_DOWNLOAD_CONTACTS = False
+    DOWNLOAD_CONTACTS = True
+    DOWNLOAD_PROFILE_PICTURES = True
+    GENERATE_REPORT = True
 
-    if not os.path.isfile(FILE_CONTACTS_JSON) or ALWAYS_DOWNLOAD_CONTACTS:
+    if not os.path.isfile(FILE_CONTACTS_JSON) or DOWNLOAD_CONTACTS:
         # Download contacts if not available or if forced
         contacts = tablerworld.download.contacts()
         with open(FILE_CONTACTS_JSON, "w") as file_contacts:
@@ -43,10 +45,12 @@ def main():
     df.to_excel(FILE_CONTACTS_EXCEL, sheet_name="contacts", index=False)
 
     # Download profile pictures
-    tablerworld.download.profile_pictures(df)
+    if DOWNLOAD_PROFILE_PICTURES:
+        tablerworld.download.profile_pictures(df)
 
     # Generate report
-    tablerworld.report.report(df)
+    if GENERATE_REPORT:
+        tablerworld.report.report(df)
 
 
 if __name__ == "__main__":
