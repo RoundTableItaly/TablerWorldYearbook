@@ -4,6 +4,8 @@ from datetime import datetime
 
 
 def clean(df):
+    print("Contacts clean STARTED")
+
     # Clean functions
     def clean_name(cell):
         return cell.title()
@@ -231,4 +233,5 @@ def clean(df):
     # Create utility columns
     df["profile_pic_file"] = df.apply(profile_pic_file, axis=1)
 
+    print("Contacts clean ENDED")
     return df
