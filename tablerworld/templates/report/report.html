@@ -222,12 +222,10 @@
                     </section>
 
                     <h5>MEMBRI ONORARI A VITA</h5>
-                    {% for row in get_tablers_club_pos(club.rt_club_number, "Members / Honorary Member") %} {{ m_tabler(row) }} {% endfor %}
+                    {% for row in get_tablers_club_pos(club.rt_club_number, "Members / Honorary Member", is_deceased=False) %} {{ m_tabler(row) }} {% endfor %}
 
                     <h5>MEMBRI ONORARI ALLA MEMORIA</h5>
-                    <section>
-                        <strong>DATO NON FORNITO DA TABLERWORLD</strong>
-                    </section>
+                    {% for row in get_tablers_club_pos(club.rt_club_number, "Members / Honorary Member", is_deceased=True) %} {{ m_tabler(row) }} {% endfor %}
 
                     <h5>GRANDI AMICI DI TAVOLA</h5>
                     <section>
