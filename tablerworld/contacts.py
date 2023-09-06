@@ -209,6 +209,10 @@ def clean(df):
         rt_global_positions_club_remove_redundant_positions
     )
 
+    # Recently modified contacts flag
+    RECENTLY_MODIFIED_CONTACTS_FROM = "2023-09-06T05:00:00"
+    df["recently_modified"] = df["last_modified"] > RECENTLY_MODIFIED_CONTACTS_FROM
+
     # Clean dirty rows
     df.drop(df[df["rt_club_number"].isnull()].index, inplace=True)
     df.drop(df[df["rt_club_number"] == 1].index, inplace=True)  # Remove RT 1 Milano
