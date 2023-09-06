@@ -64,6 +64,14 @@
                 <strong>{{ row.phonenumbers }}</strong><br />
                 {{ row.email }}<br />
             </div>
+            <div>
+                {% if row.recently_modified %}
+                <p>
+                    <strong style="color: red">MODIFICATO IL</strong><br />
+                    <strong style="color: red"> {{row.last_modified.strftime('%Y-%m-%d %H:%M')}}</strong>
+                </p>
+                {% endif %}
+            </div>
         </section>
         {%- endmacro %}
 
