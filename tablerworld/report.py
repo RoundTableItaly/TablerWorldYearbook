@@ -42,10 +42,18 @@ def report(df):
         .reset_index()
     )
 
-    def get_tablers_club_pos(club_number, position):
-        tablers = df.loc[
-            (df["rt_club_number"] == club_number) & (df["rt_global_positions_club"].apply(lambda x: position in x))
-        ]
+    def get_tablers_club_pos(club_number, position, is_deceased=False):
+        if is_deceased:
+            tablers = df.loc[
+                (df["rt_club_number"] == club_number)
+                & (df["rt_global_positions_club"].apply(lambda x: position in x) & (df["is_deceased"] == True))
+            ]
+        else:
+            tablers = df.loc[
+                (df["rt_club_number"] == club_number)
+                & (df["rt_global_positions_club"].apply(lambda x: position in x) & (df["is_deceased"] == False))
+            ]
+
         return tablers.sort_values(by=["last_name", "first_name"]).to_dict(orient="records")
 
     def get_tabler_area_pos(area_name, position):
