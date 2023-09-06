@@ -21,14 +21,11 @@
 
         <article id="contents">
             <h2>Contenuti</h2>
-            <h3>Comitato Nazionale</h3>
+            <h3 href="#comitato-nazionale">Comitato Nazionale</h3>
             <ul>
                 <li><a href="#comitato-nazionale"></a></li>
-                <li><a href="#presidenti-zona"></a></li>
-                <li><a href="#incarichi-speciali"></a></li>
-                <li><a href="#collegio-probiviri"></a></li>
-                <li><a href="#collegio-revisori"></a></li>
             </ul>
+
             <h3>Zone</h3>
             <ul>
                 {% for index, area in areas.iterrows() %}
@@ -133,33 +130,32 @@
             <section class="national">
                 <!-- National frontpage -->
                 <h3 id="comitato-nazionale">Comitato Nazionale</h3>
-                <section class="area-desc">
-                    <!-- -->{{ m_national_tabler("Presidente Nazionale", "presidente@roundtable.it", "presidente@pecroundtable.it", get_tabler_national_pos("Board / President")) }}
-                    <!-- -->{{ m_national_tabler("Vice Presidente Nazionale", "vicepresidente@roundtable.it", "vicepresidente@pecroundtable.it", get_tabler_national_pos("Board / Vice-President")) }}
-                    <!-- -->{{ m_national_tabler("Past President Nazionale", "pastpresident@roundtable.it", "pastpresident@pecroundtable.it", get_tabler_national_pos("Board / Past-President")) }}
-                    <!-- -->{{ m_national_tabler("Consigliere Nazionale", "consigliere@roundtable.it", "consigliere@pecroundtable.it", get_tabler_national_pos("Board / C.S.O.")) }}
-                    <!-- -->{{ m_national_tabler("Editore Nazionale", "editore@roundtable.it", "editore@pecroundtable.it", get_tabler_national_pos("Board Assistants / Editor")) }}
-                    <!-- -->{{ m_national_tabler("I.R.O.", "iro@roundtable.it", "iro@pecroundtable.it", get_tabler_national_pos("Board / I.R.O.")) }}
-                    <!-- -->{{ m_national_tabler("Tesoriere", "tesoriere@roundtable.it", "tesoriere@pecroundtable.it", get_tabler_national_pos("Board / Treasurer")) }}
 
-                    <h5 id="presidenti-zona">Presidenti di Zona</h5>
-                    <!-- -->{{ m_national_tabler("Presidente I Zona", "zona1@roundtable.it", "zona1@pecroundtable.it", get_tabler_area_pos("Area 1", "Board / President")) }}
-                    <!-- -->{{ m_national_tabler("Presidente II Zona", "zona2@roundtable.it", "zona2@pecroundtable.it", get_tabler_area_pos("Area 2", "Board / President")) }}
-                    <!-- -->{{ m_national_tabler("Presidente III Zona", "zona3@roundtable.it", "zona3@pecroundtable.it", get_tabler_area_pos("Area 3", "Board / President")) }}
-                    <!-- -->{{ m_national_tabler("Presidente V Zona", "zona5@roundtable.it", "zona5@pecroundtable.it", get_tabler_area_pos("Area 5", "Board / President")) }}
+                <!-- -->{{ m_national_tabler("Presidente Nazionale", "presidente@roundtable.it", "presidente@pecroundtable.it", get_tabler_national_pos("Board / President")) }}
+                <!-- -->{{ m_national_tabler("Vice Presidente Nazionale", "vicepresidente@roundtable.it", "vicepresidente@pecroundtable.it", get_tabler_national_pos("Board / Vice-President")) }}
+                <!-- -->{{ m_national_tabler("Past President Nazionale", "pastpresident@roundtable.it", "pastpresident@pecroundtable.it", get_tabler_national_pos("Board / Past-President")) }}
+                <!-- -->{{ m_national_tabler("Consigliere Nazionale", "consigliere@roundtable.it", "consigliere@pecroundtable.it", get_tabler_national_pos("Board / C.S.O.")) }}
+                <!-- -->{{ m_national_tabler("Editore Nazionale", "editore@roundtable.it", "editore@pecroundtable.it", get_tabler_national_pos("Board Assistants / Editor")) }}
+                <!-- -->{{ m_national_tabler("I.R.O.", "iro@roundtable.it", "iro@pecroundtable.it", get_tabler_national_pos("Board / I.R.O.")) }}
+                <!-- -->{{ m_national_tabler("Tesoriere", "tesoriere@roundtable.it", "tesoriere@pecroundtable.it", get_tabler_national_pos("Board / Treasurer")) }}
 
-                    <h5 id="incarichi-speciali">Incarichi speciali</h5>
-                    <!-- -->{{ m_national_tabler("Segretario", "segretario@roundtable.it", "segretario@pecroundtable.it", get_tabler_national_pos("Board Assistants / Secretary")) }}
-                    <!-- -->{{ m_national_tabler("Gestore Materiali", "materiali@roundtable.it", "materiali@pecroundtable.it", get_tabler_national_pos("Board Assistants / Shopkeeper")) }}
-                    <!-- -->{{ m_national_tabler("P.R.O.", "pro@roundtable.it", "pro@pecroundtable.it", get_tabler_national_pos("Board Assistants / P.R.O.")) }}
-                    <!-- -->{{ m_national_tabler("R.S.O.", "rso@roundtable.it", "rso@pecroundtable.it", get_tabler_national_pos("Board Assistants / R.S.O.")) }}
+                <h5 id="presidenti-zona">Presidenti di Zona</h5>
+                <!-- -->{{ m_national_tabler("Presidente I Zona", "zona1@roundtable.it", "zona1@pecroundtable.it", get_tabler_area_pos("Area 1", "Board / President")) }}
+                <!-- -->{{ m_national_tabler("Presidente II Zona", "zona2@roundtable.it", "zona2@pecroundtable.it", get_tabler_area_pos("Area 2", "Board / President")) }}
+                <!-- -->{{ m_national_tabler("Presidente III Zona", "zona3@roundtable.it", "zona3@pecroundtable.it", get_tabler_area_pos("Area 3", "Board / President")) }}
+                <!-- -->{{ m_national_tabler("Presidente V Zona", "zona5@roundtable.it", "zona5@pecroundtable.it", get_tabler_area_pos("Area 5", "Board / President")) }}
 
-                    <h5 id="collegio-probiviri">Collegio dei Probiviri</h5>
-                    <p><strong>DATO NON FORNITO DA TABLERWORLD</strong></p>
+                <h5 id="incarichi-speciali">Incarichi speciali</h5>
+                <!-- -->{{ m_national_tabler("Segretario", "segretario@roundtable.it", "segretario@pecroundtable.it", get_tabler_national_pos("Board Assistants / Secretary")) }}
+                <!-- -->{{ m_national_tabler("Gestore Materiali", "materiali@roundtable.it", "materiali@pecroundtable.it", get_tabler_national_pos("Board Assistants / Shopkeeper")) }}
+                <!-- -->{{ m_national_tabler("P.R.O.", "pro@roundtable.it", "pro@pecroundtable.it", get_tabler_national_pos("Board Assistants / P.R.O.")) }}
+                <!-- -->{{ m_national_tabler("R.S.O.", "rso@roundtable.it", "rso@pecroundtable.it", get_tabler_national_pos("Board Assistants / R.S.O.")) }}
 
-                    <h5 id="collegio-revisori">Collegio dei revisori dei conti</h5>
-                    <p><strong>DATO NON FORNITO DA TABLERWORLD</strong></p>
-                </section>
+                <h5 id="collegio-probiviri">Collegio dei Probiviri</h5>
+                <p><strong>DATO NON FORNITO DA TABLERWORLD</strong></p>
+
+                <h5 id="collegio-revisori">Collegio dei revisori dei conti</h5>
+                <p><strong>DATO NON FORNITO DA TABLERWORLD</strong></p>
             </section>
 
             {% for index, area in clubs_in_areas.iterrows() %}
