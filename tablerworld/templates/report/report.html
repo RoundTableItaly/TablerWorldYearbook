@@ -21,6 +21,14 @@
 
         <article id="contents">
             <h2>Contenuti</h2>
+            <h3>Comitato Nazionale</h3>
+            <ul>
+                <li><a href="#comitato-nazionale"></a></li>
+                <li><a href="#presidenti-zona"></a></li>
+                <li><a href="#incarichi-speciali"></a></li>
+                <li><a href="#collegio-probiviri"></a></li>
+                <li><a href="#collegio-revisori"></a></li>
+            </ul>
             <h3>Zone</h3>
             <ul>
                 {% for index, area in areas.iterrows() %}
@@ -43,7 +51,7 @@
                 {% if row.profile_pic %}
                 <img class="profile-pic" src="{{ DIST_FOLDER }}/profile_pics/{{ row.profile_pic_file }}" />
                 {% else %}
-                <div class="profile-pic-placeholder"></div>
+                <img class="profile-pic" src="{{ TEMPLATE_DIR }}/placeholder_M.png" />
                 {% endif %}
             </div>
             <div class="tabler-desc">
@@ -66,7 +74,7 @@
                 {% if row.profile_pic %}
                 <img class="profile-pic" src="{{ DIST_FOLDER }}/profile_pics/{{ row.profile_pic_file }}" />
                 {% else %}
-                <div class="profile-pic-placeholder"></div>
+                <img class="profile-pic" src="{{ TEMPLATE_DIR }}/placeholder_M.png" />
                 {% endif %}
             </div>
             <div>
@@ -93,7 +101,59 @@
         </section>
         {%- endmacro %}
 
+        <!-- Macro for national tabler -->
+        {% macro m_national_tabler(position, mail, pec, row) -%}
+        <section class="tabler">
+            <div>
+                {% if row.profile_pic %}
+                <img class="profile-pic" src="{{ DIST_FOLDER }}/profile_pics/{{ row.profile_pic_file }}" />
+                {% else %}
+                <img class="profile-pic" src="{{ TEMPLATE_DIR }}/placeholder_M.png" />
+                {% endif %}
+            </div>
+            <div>
+                {{ position }}<br />
+                <strong>{{ row.first_name|default('-') }} {{ row.last_name|default('-')|upper }}</strong><br />
+                {{ row.rt_area_name }} - RT {{ row.rt_club_name|default('-') }}<br />
+                <strong>{{ row.phonenumbers }} <br /></strong>
+                {{ mail }} / {{ pec }}<br />
+            </div>
+        </section>
+        {%- endmacro %}
+
         <article id="skills">
+            <section class="national">
+                <!-- National frontpage -->
+                <h3 id="comitato-nazionale">Comitato Nazionale</h3>
+                <section class="area-desc">
+                    <!-- -->{{ m_national_tabler("Presidente Nazionale", "presidente@roundtable.it", "presidente@pecroundtable.it", get_tabler_national_pos("Board / President")) }}
+                    <!-- -->{{ m_national_tabler("Vice Presidente Nazionale", "vicepresidente@roundtable.it", "vicepresidente@pecroundtable.it", get_tabler_national_pos("Board / Vice-President")) }}
+                    <!-- -->{{ m_national_tabler("Past President Nazionale", "pastpresident@roundtable.it", "pastpresident@pecroundtable.it", get_tabler_national_pos("Board / Past-President")) }}
+                    <!-- -->{{ m_national_tabler("Consigliere Nazionale", "consigliere@roundtable.it", "consigliere@pecroundtable.it", get_tabler_national_pos("Board / C.S.O.")) }}
+                    <!-- -->{{ m_national_tabler("Editore Nazionale", "editore@roundtable.it", "editore@pecroundtable.it", get_tabler_national_pos("Board Assistants / Editor")) }}
+                    <!-- -->{{ m_national_tabler("I.R.O.", "iro@roundtable.it", "iro@pecroundtable.it", get_tabler_national_pos("Board / I.R.O.")) }}
+                    <!-- -->{{ m_national_tabler("Tesoriere", "tesoriere@roundtable.it", "tesoriere@pecroundtable.it", get_tabler_national_pos("Board / Treasurer")) }}
+
+                    <h5 id="presidenti-zona">Presidenti di Zona</h5>
+                    <!-- -->{{ m_national_tabler("Presidente I Zona", "zona1@roundtable.it", "zona1@pecroundtable.it", get_tabler_area_pos("Area 1", "Board / President")) }}
+                    <!-- -->{{ m_national_tabler("Presidente II Zona", "zona2@roundtable.it", "zona2@pecroundtable.it", get_tabler_area_pos("Area 2", "Board / President")) }}
+                    <!-- -->{{ m_national_tabler("Presidente III Zona", "zona3@roundtable.it", "zona3@pecroundtable.it", get_tabler_area_pos("Area 3", "Board / President")) }}
+                    <!-- -->{{ m_national_tabler("Presidente V Zona", "zona5@roundtable.it", "zona5@pecroundtable.it", get_tabler_area_pos("Area 5", "Board / President")) }}
+
+                    <h5 id="incarichi-speciali">Incarichi speciali</h5>
+                    <!-- -->{{ m_national_tabler("Segretario", "segretario@roundtable.it", "segretario@pecroundtable.it", get_tabler_national_pos("Board Assistants / Secretary")) }}
+                    <!-- -->{{ m_national_tabler("Gestore Materiali", "materiali@roundtable.it", "materiali@pecroundtable.it", get_tabler_national_pos("Board Assistants / Shopkeeper")) }}
+                    <!-- -->{{ m_national_tabler("P.R.O.", "pro@roundtable.it", "pro@pecroundtable.it", get_tabler_national_pos("Board Assistants / P.R.O.")) }}
+                    <!-- -->{{ m_national_tabler("R.S.O.", "rso@roundtable.it", "rso@pecroundtable.it", get_tabler_national_pos("Board Assistants / R.S.O.")) }}
+
+                    <h5 id="collegio-probiviri">Collegio dei Probiviri</h5>
+                    <p><strong>DATO NON FORNITO DA TABLERWORLD</strong></p>
+
+                    <h5 id="collegio-revisori">Collegio dei revisori dei conti</h5>
+                    <p><strong>DATO NON FORNITO DA TABLERWORLD</strong></p>
+                </section>
+            </section>
+
             {% for index, area in clubs_in_areas.iterrows() %}
             <section class="areas">
                 <!-- Area frontpage -->
@@ -127,31 +187,25 @@
                             <div>
                                 nometavola@roundtable.it – nometavola@pecroundtable.it<br />
                                 www.sitotavola.it<br />
-                                (Facebook) -<br />
                                 (Instagram) -<br />
+                                (Facebook) -<br />
+                                (Twitter) -<br />
+                                (LinkedIn) -<br />
                             </div>
                         </div>
                         <div class="club-item">
                             <h5>CONSIGLIO DIRETTIVO DI TAVOLA</h5>
                             <p>
-                                {% for tabler in get_tablers_club_pos(club.rt_club_number, "Board / President") %}{{ tabler.first_name }} {{ tabler.last_name }}{% if not loop.last
-                                %}, {% endif %} {% endfor %} (P)<br />
-                                {% for tabler in get_tablers_club_pos(club.rt_club_number, "Board / Vice-President") %}{{ tabler.first_name }} {{ tabler.last_name }}{% if not
-                                loop.last %}, {% endif %}{% endfor %} (VP)<br />
-                                {% for tabler in get_tablers_club_pos(club.rt_club_number, "Board / Past-President") %}{{ tabler.first_name }} {{ tabler.last_name }}{% if not
-                                loop.last %}, {% endif %}{% endfor %} (PP)<br />
-                                {% for tabler in get_tablers_club_pos(club.rt_club_number, "Board Assistants / C.S.O.") %}{{ tabler.first_name }} {{ tabler.last_name }}{% if not
-                                loop.last %}, {% endif %}{% endfor %} (CONS)<br />
-                                {% for tabler in get_tablers_club_pos(club.rt_club_number, "Board / I.R.O.") %}{{ tabler.first_name }} {{ tabler.last_name }}{% if not loop.last %},
-                                {% endif %}{% endfor %} (C)<br />
-                                {% for tabler in get_tablers_club_pos(club.rt_club_number, "Board / Treasurer") %}{{ tabler.first_name }} {{ tabler.last_name }}{% if not loop.last
-                                %}, {% endif %}{% endfor %} (T)<br />
-                                {% for tabler in get_tablers_club_pos(club.rt_club_number, "Board / Secretary") %}{{ tabler.first_name }} {{ tabler.last_name }}{% if not loop.last
-                                %}, {% endif %}{% endfor %} (S)<br />
+                                {% for tabler in get_tablers_club_pos(club.rt_club_number, "Board / President") %}{{ tabler.first_name }} {{ tabler.last_name }}{% if not loop.last %}, {% endif %} {% endfor %} (P)<br />
+                                {% for tabler in get_tablers_club_pos(club.rt_club_number, "Board / Vice-President") %}{{ tabler.first_name }} {{ tabler.last_name }}{% if not loop.last %}, {% endif %}{% endfor %} (VP)<br />
+                                {% for tabler in get_tablers_club_pos(club.rt_club_number, "Board / Past-President") %}{{ tabler.first_name }} {{ tabler.last_name }}{% if not loop.last %}, {% endif %}{% endfor %} (PP)<br />
+                                {% for tabler in get_tablers_club_pos(club.rt_club_number, "Board Assistants / C.S.O.") %}{{ tabler.first_name }} {{ tabler.last_name }}{% if not loop.last %}, {% endif %}{% endfor %} (CONS)<br />
+                                {% for tabler in get_tablers_club_pos(club.rt_club_number, "Board / I.R.O.") %}{{ tabler.first_name }} {{ tabler.last_name }}{% if not loop.last %}, {% endif %}{% endfor %} (C)<br />
+                                {% for tabler in get_tablers_club_pos(club.rt_club_number, "Board / Treasurer") %}{{ tabler.first_name }} {{ tabler.last_name }}{% if not loop.last %}, {% endif %}{% endfor %} (T)<br />
+                                {% for tabler in get_tablers_club_pos(club.rt_club_number, "Board / Secretary") %}{{ tabler.first_name }} {{ tabler.last_name }}{% if not loop.last %}, {% endif %}{% endfor %} (S)<br />
                                 <strong>DATO NON FORNITO DA TABLERWORLD</strong> (CER)<br />
                                 <strong>DATO NON FORNITO DA TABLERWORLD</strong> (GM)<br />
-                                {% for tabler in get_tablers_club_pos(club.rt_club_number, "Board Assistants / Webmaster") %}{{ tabler.first_name }} {{ tabler.last_name }}{% if not
-                                loop.last %}, {% endif %}{% endfor %} (WM)<br />
+                                {% for tabler in get_tablers_club_pos(club.rt_club_number, "Board Assistants / Webmaster") %}{{ tabler.first_name }} {{ tabler.last_name }}{% if not loop.last %}, {% endif %}{% endfor %} (WM)<br />
                             </p>
                         </div>
                     </div>
@@ -169,6 +223,16 @@
 
                     <h5>MEMBRI ONORARI A VITA</h5>
                     {% for row in get_tablers_club_pos(club.rt_club_number, "Members / Honorary Member") %} {{ m_tabler(row) }} {% endfor %}
+
+                    <h5>MEMBRI ONORARI ALLA MEMORIA</h5>
+                    <section>
+                        <strong>DATO NON FORNITO DA TABLERWORLD</strong>
+                    </section>
+
+                    <h5>GRANDI AMICI DI TAVOLA</h5>
+                    <section>
+                        <strong>DATO NON FORNITO DA TABLERWORLD</strong>
+                    </section>
                 </section>
                 {% endfor %}
             </section>

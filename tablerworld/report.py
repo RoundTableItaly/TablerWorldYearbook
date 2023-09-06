@@ -46,12 +46,18 @@ def report(df):
         tablers = df.loc[
             (df["rt_club_number"] == club_number) & (df["rt_global_positions_club"].apply(lambda x: position in x))
         ]
-        return tablers.sort_values(by="last_name").to_dict(orient="records")
+        return tablers.sort_values(by=["last_name", "first_name"]).to_dict(orient="records")
 
     def get_tabler_area_pos(area_name, position):
         tablers = df.loc[
             (df["rt_area_name"] == area_name) & (df["rt_global_positions_area"].apply(lambda x: position in x))
         ]
+        t = tablers.head(1).to_dict(orient="records")
+
+        return t[0] if len(t) > 0 else None
+
+    def get_tabler_national_pos(position):
+        tablers = df.loc[df["rt_global_positions_national"].apply(lambda x: position in x)]
         t = tablers.head(1).to_dict(orient="records")
 
         return t[0] if len(t) > 0 else None
@@ -77,6 +83,7 @@ def report(df):
         clubs_in_areas=clubs_in_areas,
         get_tablers_club_pos=get_tablers_club_pos,
         get_tabler_area_pos=get_tabler_area_pos,
+        get_tabler_national_pos=get_tabler_national_pos,
     )
     # HTML write to file
     with open(OUTPUT_HTML, "wb") as f:
