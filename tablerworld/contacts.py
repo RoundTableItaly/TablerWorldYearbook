@@ -108,6 +108,12 @@ def clean(df):
             "Board / I.R.O.",
             "Board / P.R.O.",
             "Board Assistants / Webmaster",
+            "Board Assistants / Editor",
+            "Board / C.S.O.",
+            "Board Assistants / P.R.O.",
+            "Board Assistants / R.S.O.",
+            "Board Assistants / Shopkeeper",
+            "Board Assistants / Secretary",
         ]
 
         def is_relevant(x):
@@ -176,6 +182,14 @@ def clean(df):
 
         return res
 
+    def rt_global_positions_club_remove_redundant_positions(cell):
+        HONORARY_MEMBER = "Members / Honorary Member"
+        PAST_MEMBER = "Past Members / Past Member"
+
+        if HONORARY_MEMBER in cell and PAST_MEMBER in cell:
+            cell.remove(PAST_MEMBER)
+        return cell
+
     # Apply
     df["first_name"] = df["first_name"].apply(clean_name)
     df["last_name"] = df["last_name"].apply(clean_name)
@@ -189,6 +203,9 @@ def clean(df):
     df["rt_global_positions_national"] = df["rt_global_positions"].apply(rt_global_positions_national)
     df["rt_global_positions_area"] = df["rt_global_positions"].apply(rt_global_positions_area)
     df["rt_global_positions_club"] = df["rt_global_positions"].apply(rt_global_positions_club)
+    df["rt_global_positions_club"] = df["rt_global_positions_club"].apply(
+        rt_global_positions_club_remove_redundant_positions
+    )
 
     # Clean dirty rows
     df.drop(df[df["rt_club_number"].isnull()].index, inplace=True)
