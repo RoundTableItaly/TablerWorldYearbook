@@ -224,6 +224,9 @@ def clean(df):
     # Convert types
     df["rt_club_number"] = df["rt_club_number"].astype("int")
     df["birth_date"] = pd.to_datetime(df["birth_date"])
+    df["last_modified"] = pd.to_datetime(df["last_modified"]).dt.tz_localize(None)
+    df["created_on"] = pd.to_datetime(df["created_on"]).dt.tz_localize(None)
+    df["last_sync"] = pd.to_datetime(df["last_sync"]).dt.tz_localize(None)
 
     # Create utility columns
     df["profile_pic_file"] = df.apply(profile_pic_file, axis=1)
