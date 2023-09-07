@@ -12,7 +12,7 @@ def clean(df):
 
     def clean_phonenumbers(cell):
         if not cell:
-            return "-"
+            return None
 
         mobile = None
         home = None
@@ -27,7 +27,7 @@ def clean(df):
         elif home is not None:
             phone = home
         else:
-            phone = "-"
+            phone = None
 
         phone = phone.encode("ascii", errors="ignore").decode()
         phone_parsed = phonenumbers.parse(phone, "IT")
@@ -35,11 +35,14 @@ def clean(df):
         return phone_international
 
     def email(cell):
-        return str(cell).lower()
+        if cell is None:
+            return None
+        else:
+            return str(cell).lower()
 
     def clean_address(cell):
         if not cell:
-            return "-"
+            return None
 
         item = cell[0]
 
@@ -47,6 +50,9 @@ def clean(df):
         # street2 = item.get("street2")
         postal_code = item.get("postal_code")
         city = item.get("city")
+
+        if not all((street1, postal_code, city)):
+            return None
 
         street1 = str(street1).title()
         # street2 = str(street2).title()
@@ -57,25 +63,28 @@ def clean(df):
 
     def clean_companies(cell):
         if not cell:
-            return "-"
+            return None
 
         item = cell[0]
         sector = item.get("sector", None)
         function = item.get("function", None)
 
-        return f"{function.capitalize()}"
+        if function is None:
+            return None
+        else:
+            return f"{function.capitalize()}"
 
     def name_partner(cell):
         if not cell:
-            return ""
+            return None
 
         member_info = [x for x in cell if x.get("name") == "Member Info"]
         if not member_info:
-            return ""
+            return None
 
         name_partner = [x for x in member_info[0].get("rows") if x.get("key") == "Name partner"]
         if not name_partner:
-            return ""
+            return None
 
         return name_partner[0].get("value")
 
