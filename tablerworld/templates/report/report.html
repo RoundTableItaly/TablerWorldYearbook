@@ -53,19 +53,18 @@
             </div>
             <div class="tabler-desc">
                 <strong>{{ row.last_name|upper }} {{ row.first_name }}</strong>
-                {{ "({})".format(row.birth_date.strftime('%d/%m/%Y')) if pd.isnull(row.birth_date) is false }}
-                <em>{{row.name_partner}}</em><br />
+                {{ "({})".format(row.birth_date.strftime('%d/%m/%Y')) if pd.isnull(row.birth_date) is false }} {% if row.name_partner is not none %}<em>{{ row.name_partner }}</em>{% endif %}<br />
 
-                {{ row.job }}<br />
-                {{ row.address }}<br />
-                <strong>{{ row.phonenumbers }}</strong><br />
-                {{ row.email }}<br />
+                {% if row.job is not none %}{{ row.job }}{% else %}<strong class="red">Professione</strong>{% endif %}<br />
+                {% if row.address is not none %}{{ row.address }}{% else %}<strong class="red">Indirizzo</strong>{% endif %}<br />
+                {% if row.phonenumbers is not none %} <strong>{{ row.phonenumbers }}</strong>{% else %}<strong class="red">Telefono</strong>{% endif %}<br />
+                {% if row.email is not none %}{{ row.email }}{% else %}<strong class="red">E-mail</strong>{% endif %}<br />
             </div>
             <div>
                 {% if row.recently_modified %}
                 <p>
-                    <strong style="color: red">MODIFICATO IL</strong><br />
-                    <strong style="color: red"> {{row.last_modified.strftime('%Y-%m-%d %H:%M')}}</strong>
+                    <strong class="red">MODIFICATO IL</strong><br />
+                    <strong class="red"> {{row.last_modified.strftime('%Y-%m-%d %H:%M')}}</strong>
                 </p>
                 {% endif %}
             </div>
@@ -86,6 +85,14 @@
                 {{ position }} {% if position == "Gestore Materiali" %} - <strong>DATO NON FORNITO DA TABLERWORLD {% endif %}</strong><br />
                 <strong>{{ row.first_name|default('-') }} {{ row.last_name|default('-')|upper }}</strong><br />
                 RT {{ row.rt_club_name|default('-') }}<br />
+            </div>
+            <div>
+                {% if row.recently_modified %}
+                <p>
+                    <strong class="red">MODIFICATO IL</strong><br />
+                    <strong class="red"> {{row.last_modified.strftime('%Y-%m-%d %H:%M')}}</strong>
+                </p>
+                {% endif %}
             </div>
         </section>
         {%- endmacro %}
@@ -120,8 +127,16 @@
                 {{ position }}<br />
                 <strong>{{ row.first_name|default('-') }} {{ row.last_name|default('-')|upper }}</strong><br />
                 {{ row.rt_area_name }} - RT {{ row.rt_club_name|default('-') }}<br />
-                <strong>{{ row.phonenumbers }} <br /></strong>
+                {% if row.phonenumbers is not none %} <strong>{{ row.phonenumbers }}</strong>{% else %}<strong class="red">Telefono</strong>{% endif %}<br />
                 {{ mail }} / {{ pec }}<br />
+            </div>
+            <div>
+                {% if row.recently_modified %}
+                <p>
+                    <strong class="red">MODIFICATO IL</strong><br />
+                    <strong class="red"> {{row.last_modified.strftime('%Y-%m-%d %H:%M')}}</strong>
+                </p>
+                {% endif %}
             </div>
         </section>
         {%- endmacro %}
