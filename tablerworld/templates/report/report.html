@@ -60,12 +60,10 @@
                 {% if row.phonenumbers is not none %} <strong>{{ row.phonenumbers }}</strong>{% else %}<strong class="red">Telefono</strong>{% endif %}<br />
                 {% if row.email is not none %}{{ row.email }}{% else %}<strong class="red">E-mail</strong>{% endif %}<br />
             </div>
-            <div>
+            <div class="tabler-notes">
                 {% if row.recently_modified %}
-                <p>
-                    <strong class="red">MODIFICATO IL</strong><br />
-                    <strong class="red"> {{row.last_modified.strftime('%Y-%m-%d %H:%M')}}</strong>
-                </p>
+                <strong class="red">MODIFICATO IL</strong><br />
+                <strong class="red"> {{row.last_modified.strftime('%Y-%m-%d %H:%M')}}</strong>
                 {% endif %}
             </div>
         </section>
@@ -88,10 +86,8 @@
             </div>
             <div>
                 {% if row.recently_modified %}
-                <p>
-                    <strong class="red">MODIFICATO IL</strong><br />
-                    <strong class="red"> {{row.last_modified.strftime('%Y-%m-%d %H:%M')}}</strong>
-                </p>
+                <strong class="red">MODIFICATO IL</strong><br />
+                <strong class="red"> {{row.last_modified.strftime('%Y-%m-%d %H:%M')}}</strong>
                 {% endif %}
             </div>
         </section>
@@ -123,19 +119,17 @@
                 <img class="profile-pic" src="{{ TEMPLATE_DIR }}/placeholder_M.png" />
                 {% endif %}
             </div>
-            <div>
+            <div class="tabler-desc">
                 {{ position }}<br />
                 <strong>{{ row.first_name|default('-') }} {{ row.last_name|default('-')|upper }}</strong><br />
                 {{ row.rt_area_name }} - RT {{ row.rt_club_name|default('-') }}<br />
                 {% if row.phonenumbers is not none %} <strong>{{ row.phonenumbers }}</strong>{% else %}<strong class="red">Telefono</strong>{% endif %}<br />
                 {{ mail }} / {{ pec }}<br />
             </div>
-            <div>
+            <div class="tabler-notes">
                 {% if row.recently_modified %}
-                <p>
-                    <strong class="red">MODIFICATO IL</strong><br />
-                    <strong class="red"> {{row.last_modified.strftime('%Y-%m-%d %H:%M')}}</strong>
-                </p>
+                <strong class="red">MODIFICATO IL</strong><br />
+                <strong class="red"> {{row.last_modified.strftime('%Y-%m-%d %H:%M')}}</strong>
                 {% endif %}
             </div>
         </section>
