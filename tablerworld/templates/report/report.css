@@ -328,10 +328,12 @@ h4 {
 .tabler {
   display: flex;
   flex-direction: row;
+  flex-wrap: nowrap;
   align-items: stretch;
   width: 100%;
   padding-top: .1cm;
   padding-bottom: .1cm;
+  break-inside: avoid
 }
 
 .tabler-desc {
@@ -339,12 +341,14 @@ h4 {
   padding-right: .4cm;
 }
 
+.tabler-notes {
+  flex-shrink: 2;
+}
+
 .profile-pic {
-  display: inline-block;
   height: 2.9cm;
   width: 2.9cm;
   margin-right: .5cm;
-  vertical-align: middle;
 }
 
 #offers {
