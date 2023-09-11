@@ -53,7 +53,7 @@
             </div>
             <div class="tabler-desc">
                 <strong>{{ row.last_name|upper }} {{ row.first_name }}</strong>
-                {{ "({})".format(row.birth_date.strftime('%d/%m/%Y')) if pd.isnull(row.birth_date) is false }} {% if row.name_partner is not none %}<em>{{ row.name_partner }}</em>{% endif %}<br />
+                {% if pd.isnull(row.birth_date) is false %}{{ "({})".format(row.birth_date.strftime('%d/%m/%Y')) }} {% else %}<strong class="red">(Data di nascita)</strong>{% endif %} {% if row.name_partner is not none %}<em>{{ row.name_partner }}</em>{% endif %}<br />
 
                 {% if row.job is not none %}{{ row.job }}{% else %}<strong class="red">Professione</strong>{% endif %}<br />
                 {% if row.address is not none %}{{ row.address }}{% else %}<strong class="red">Indirizzo</strong>{% endif %}<br />
@@ -79,12 +79,12 @@
                 <img class="profile-pic" src="{{ TEMPLATE_DIR }}/placeholder_M.png" />
                 {% endif %}
             </div>
-            <div>
+            <div class="tabler-desc">
                 {{ position }} {% if position == "Gestore Materiali" %} - <strong>DATO NON FORNITO DA TABLERWORLD {% endif %}</strong><br />
                 <strong>{{ row.first_name|default('-') }} {{ row.last_name|default('-')|upper }}</strong><br />
                 RT {{ row.rt_club_name|default('-') }}<br />
             </div>
-            <div>
+            <div class="tabler-notes">
                 {% if row.recently_modified %}
                 <strong class="red">MODIFICATO IL</strong><br />
                 <strong class="red"> {{row.last_modified.strftime('%Y-%m-%d %H:%M')}}</strong>
