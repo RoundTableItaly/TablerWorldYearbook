@@ -225,9 +225,11 @@ def clean(df):
     # Clean dirty rows
     df.drop(df[df["rt_club_number"].isnull()].index, inplace=True)
     df.drop(df[df["rt_club_number"] == 1].index, inplace=True)  # Remove RT 1 Milano
+    df.drop(df[df["rt_club_number"] == 19].index, inplace=True)  # Remove RT 19 Livorno
     df.drop(df[df["rt_club_number"] == 20].index, inplace=True)  # Remove RT 20 Mantova
     df.drop(df[df["rt_club_number"] == 26].index, inplace=True)  # Remove RT 26 Asolo
     df.drop(df[df["rt_club_number"] == 39].index, inplace=True)  # Remove RT 39 Bergamo
+    df.drop(df[df["rt_club_number"] == 47].index, inplace=True)  # Remove RT 47 Arezzo
     df.drop(df[df["rt_club_number"] == 50].index, inplace=True)  # Remove RT 50 Perugia
     df.drop(df[df["rt_club_number"] == 55].index, inplace=True)  # Remove RT 55 Pinerolo
 
