@@ -21,8 +21,10 @@ def main():
     logger.addHandler(handler)
     logger.setLevel(logging.WARN)
 
-    DOWNLOAD_CONTACTS = True
-    DOWNLOAD_PROFILE_PICTURES = True
+    DOWNLOAD_CONTACTS = False
+    CONTACTS_CLEAN = True
+    CONTACTS_EXPORT_XLSX = True
+    DOWNLOAD_PROFILE_PICTURES = False
     GENERATE_REPORT = True
 
     if not os.path.isfile(FILE_CONTACTS_JSON) or DOWNLOAD_CONTACTS:
@@ -39,10 +41,12 @@ def main():
     df = pd.DataFrame(contacts)
 
     # Apply cleaning
-    df = tablerworld.contacts.clean(df)
+    if CONTACTS_CLEAN:
+        df = tablerworld.contacts.clean(df)
 
     # Save excel file
-    df.to_excel(FILE_CONTACTS_EXCEL, sheet_name="contacts", index=False)
+    if CONTACTS_EXPORT_XLSX:
+        df.to_excel(FILE_CONTACTS_EXCEL, sheet_name="contacts", index=False)
 
     # Download profile pictures
     if DOWNLOAD_PROFILE_PICTURES:

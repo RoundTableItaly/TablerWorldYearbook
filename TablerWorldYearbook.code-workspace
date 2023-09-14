@@ -5,6 +5,6 @@
         }
     ],
     "settings": {
-        "python.formatting.blackArgs": ["--line-length=120"]
+        "black-formatter.args": ["--line-length", "140"]
     }
 }
