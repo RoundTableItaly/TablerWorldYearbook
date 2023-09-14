@@ -44,6 +44,11 @@
         <!-- Macro for tabler description -->
         {% macro m_tabler(row) -%}
         <section class="tabler">
+            {% if row.is_deceased %}
+            <div class="tabler-desc">
+                <strong>{{ row.last_name|upper }} {{ row.first_name }}</strong>
+            </div>
+            {% else %}
             <div>
                 {% if row.profile_pic %}
                 <img class="profile-pic" src="{{ DIST_FOLDER }}/profile_pics/{{ row.profile_pic_file }}" />
@@ -60,6 +65,7 @@
                 {% if row.phonenumbers is not none %} <strong>{{ row.phonenumbers }}</strong>{% else %}<strong class="red">Telefono</strong>{% endif %}<br />
                 {% if row.email is not none %}{{ row.email }}{% else %}<strong class="red">E-mail</strong>{% endif %}<br />
             </div>
+            {% endif %}
             <div class="tabler-notes">
                 {% if row.recently_modified %}
                 <strong class="red">MODIFICATO IL</strong><br />
