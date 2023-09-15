@@ -260,11 +260,6 @@ def clean(df):
     for club in config.get("contacts").get("remove").get("rt_club_number"):
         df.drop(df[df["rt_club_number"] == club].index, inplace=True)
 
-    # Remove members expelled, resigned or without relevant positions
-    df = df[~df["rt_global_positions"].str.len().eq(0)].copy()  # Contacts with no positions
-    for status in config.get("contacts").get("remove").get("rt_status"):
-        df.drop(df[df["rt_status"] == status].index, inplace=True)
-
     # Convert types
     df["rt_club_number"] = df["rt_club_number"].astype("int")
     df["birth_date"] = pd.to_datetime(df["birth_date"])
@@ -296,6 +291,12 @@ def clean(df):
     df["is_honorary_member_for_year_club"] = df["rt_global_positions_club"].apply(is_honorary_member_for_year_club)
     df["is_honorary_member_for_year_national"] = df["rt_global_positions_national"].apply(is_honorary_member_for_year_national)
     df["has_membership_errors"] = df.apply(has_membership_errors, axis=1)
+
+    # Remove contacts with no positions
+    df = df[~df["rt_global_positions"].str.len().eq(0)].copy()
+    # Remove contacts in status expelled, resigned
+    for status in config.get("contacts").get("remove").get("rt_status"):
+        df.drop(df[df["rt_status"] == status].index, inplace=True)
 
     # Recently modified contacts flag
     df["recently_modified"] = df["last_modified"] > config.get("contacts").get("recently_modified_contacts_from")
