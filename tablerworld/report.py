@@ -16,12 +16,7 @@ OUTPUT_HTML = PurePath.joinpath(DIST_FOLDER, "report.html")
 def report(df):
     print("Report generation STARTED")
 
-    areas = (
-        df[["rt_area_name", "rt_area_subdomain"]]
-        .drop_duplicates(ignore_index=True)
-        .sort_values(by="rt_area_name")
-        .copy()
-    )
+    areas = df[["rt_area_name", "rt_area_subdomain"]].drop_duplicates(ignore_index=True).sort_values(by="rt_area_name").copy()
     clubs = (
         df[["rt_club_name", "rt_club_subdomain", "rt_club_number"]]
         .drop_duplicates(ignore_index=True)
@@ -42,36 +37,44 @@ def report(df):
         .reset_index()
     )
 
-    def get_tablers_club_pos(club_number, position, is_deceased=False):
-        if is_deceased:
-            tablers = df.loc[
-                (df["rt_club_number"] == club_number)
-                & (df["rt_global_positions_club"].apply(lambda x: position in x) & (df["is_deceased"] == True))
-            ]
-        else:
-            tablers = df.loc[
-                (df["rt_club_number"] == club_number)
-                & (df["rt_global_positions_club"].apply(lambda x: position in x) & (df["is_deceased"] == False))
-            ]
+    def is_position_present_in_list(cell, args):
+        position = args
+        is_present = False
+
+        for x in cell:
+            if position in x.get("position"):
+                is_present = True
+
+        return is_present
+
+    def get_tablers_club_pos(club_number, position, is_deceased=False, hmfl=False, hmfy=False):
+        tablers = df.loc[
+            (df["rt_club_number"] == club_number)
+            & (
+                df["rt_global_positions_club"].apply(is_position_present_in_list, args=(position,))
+                & (df["is_deceased"] == is_deceased)
+                & (df["is_honorary_member_for_life_club"] == hmfl)
+                & (df["is_honorary_member_for_year_club"] == hmfy)
+            )
+        ]
 
         return tablers.sort_values(by=["last_name", "first_name"]).to_dict(orient="records")
 
     def get_tabler_area_pos(area_name, position):
         tablers = df.loc[
-            (df["rt_area_name"] == area_name) & (df["rt_global_positions_area"].apply(lambda x: position in x))
+            (df["rt_area_name"] == area_name) & (df["rt_global_positions_area"].apply(is_position_present_in_list, args=(position,)))
         ]
         t = tablers.head(1).to_dict(orient="records")
 
         return t[0] if len(t) > 0 else None
 
     def get_tabler_national_pos(position):
-        tablers = df.loc[df["rt_global_positions_national"].apply(lambda x: position in x)]
+        tablers = df.loc[df["rt_global_positions_national"].apply(is_position_present_in_list, args=(position,))]
         t = tablers.head(1).to_dict(orient="records")
 
         return t[0] if len(t) > 0 else None
 
     # Jinja
-
     env = Environment(
         loader=PackageLoader("tablerworld"),
         autoescape=select_autoescape(),
