@@ -10,6 +10,7 @@ import traceback
 MODULE_PATH = Path(__file__).parent
 DIST_FOLDER = PurePath.joinpath(Path(MODULE_PATH).parent, "dist")
 PROFILE_PICS_FOLDER = PurePath.joinpath(DIST_FOLDER, "profile_pics")
+PROFILE_PICS_ZIP = PurePath.joinpath(DIST_FOLDER, "profile_pics.zip")
 
 LINE_UP = "\033[1A"
 LINE_CLEAR = "\x1b[2K"
@@ -64,6 +65,9 @@ def profile_pictures(df):
     shutil.rmtree(PROFILE_PICS_FOLDER, ignore_errors=True)
     os.makedirs(PROFILE_PICS_FOLDER, exist_ok=True)
 
+    # Remove old zip file
+    PROFILE_PICS_ZIP.unlink(missing_ok=True)
+
     # Prepare dataframe
     df_pictures = df.dropna(subset=["profile_pic"])
 
@@ -73,13 +77,13 @@ def profile_pictures(df):
         while True:
             try:
                 item = q.get()
-                id = item["profile_pic_file"]
+                pic_id = item["profile_pic_file"]
 
                 print(LINE_UP, end=LINE_CLEAR)
-                print(f"Download profile_pic {id}")
+                print(f"Download profile_pic {pic_id}")
 
                 r = requests.get(item["profile_pic"])
-                with open(PurePath.joinpath(PROFILE_PICS_FOLDER, id), "wb") as f:
+                with open(PurePath.joinpath(PROFILE_PICS_FOLDER, pic_id), "wb") as f:
                     f.write(r.content)
 
             except Exception:
@@ -103,6 +107,10 @@ def profile_pictures(df):
 
     # Block until all tasks are done.
     q.join()
+
+    # Zip folder
+    shutil.make_archive(os.path.splitext(PROFILE_PICS_ZIP)[0], "zip", PROFILE_PICS_FOLDER)
+
     print(LINE_UP, end=LINE_CLEAR)
     print("Profile pictures download ENDED")
 

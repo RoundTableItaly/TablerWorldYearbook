@@ -12,6 +12,7 @@ openpyxl = "*"
 phonenumbers = "*"
 weasyprint = "*"
 jinja2 = "*"
+sourcery = "*"
 
 [dev-packages]
 

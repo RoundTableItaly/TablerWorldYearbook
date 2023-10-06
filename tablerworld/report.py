@@ -3,6 +3,7 @@ from jinja2 import Environment, PackageLoader, select_autoescape
 import weasyprint
 import pandas as pd
 
+from .contacts import Membership, PositionRank
 
 MODULE_PATH = Path(__file__).parent
 TEMPLATE_DIR = PurePath.joinpath(MODULE_PATH, "templates", "report")
@@ -16,12 +17,17 @@ OUTPUT_HTML = PurePath.joinpath(DIST_FOLDER, "report.html")
 def report(df):
     print("Report generation STARTED")
 
-    areas = df[["rt_area_name", "rt_area_subdomain"]].drop_duplicates(ignore_index=True).sort_values(by="rt_area_name").copy()
+    areas = (
+        df[["rt_area_name", "rt_area_subdomain"]]
+        .drop_duplicates(ignore_index=True)
+        .sort_values(by="rt_area_name")
+        .to_dict(orient="records")
+    )
     clubs = (
-        df[["rt_club_name", "rt_club_subdomain", "rt_club_number"]]
+        df[["rt_club_name", "rt_club_subdomain", "rt_club_number", "rt_area_name", "rt_area_subdomain"]]
         .drop_duplicates(ignore_index=True)
         .sort_values(by="rt_club_number")
-        .copy()
+        .to_dict(orient="records")
     )
 
     def fun_clubs(x):
@@ -35,6 +41,7 @@ def report(df):
         .groupby(["rt_area_name", "rt_area_subdomain"])
         .apply(fun_clubs)
         .reset_index()
+        .to_dict(orient="records")
     )
 
     def is_position_present_in_list(cell, args):
@@ -74,6 +81,21 @@ def report(df):
 
         return t[0] if len(t) > 0 else None
 
+    def get_tablers(positionrank, value, membership):
+        match positionrank:
+            case PositionRank.CLUB:
+                tablers = df.loc[df["rt_club_number"] == value]
+            case PositionRank.AREA:
+                tablers = df.loc[df["rt_area_name"] == value]
+            case PositionRank.ANY:
+                tablers = df
+            case _:  # wildcard - simile ad un else, deve stare alla fine
+                print("Unknown error")
+
+        tablers = tablers.loc[df[membership.value] == True].reset_index()
+
+        return tablers.sort_values(by=["last_name", "first_name"]).to_dict(orient="records")
+
     # Jinja
     env = Environment(
         loader=PackageLoader("tablerworld"),
@@ -87,6 +109,8 @@ def report(df):
     # HTML
     template = env.get_template("report/report.html")
     template_rendered = template.render(
+        Membership=Membership,
+        PositionRank=PositionRank,
         pd=pd,
         df=df,
         areas=areas,
@@ -95,6 +119,7 @@ def report(df):
         get_tablers_club_pos=get_tablers_club_pos,
         get_tabler_area_pos=get_tabler_area_pos,
         get_tabler_national_pos=get_tabler_national_pos,
+        get_tablers=get_tablers,
     )
     # HTML write to file
     with open(OUTPUT_HTML, "wb") as f:
