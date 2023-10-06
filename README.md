@@ -6,6 +6,10 @@ TablerWorldYearbook
 
     pipenv install
 
+## Update
+
+    pipenv update
+
 ## Run
 
     pipenv run python .\main.py

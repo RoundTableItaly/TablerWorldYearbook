@@ -1,19 +1,26 @@
 import tablerworld.download
 import tablerworld.contacts
 import tablerworld.report
+from pathlib import Path, PurePath
 from dotenv import load_dotenv
 import logging
 import json
 import os
 import pandas as pd
 
+MODULE_PATH = Path(__file__).parent
+DIST_FOLDER = PurePath.joinpath(Path(MODULE_PATH), "dist")
 
-FILE_CONTACTS_JSON = "dist/data_contacts.json"
-FILE_CONTACTS_EXCEL = "dist/data_contacts.xlsx"
+FILE_CONTACTS_JSON = PurePath.joinpath(DIST_FOLDER, "data_contacts.json")
+FILE_CONTACTS_EXCEL = PurePath.joinpath(DIST_FOLDER, "data_contacts.xlsx")
+FILE_CONTACTS_EXCEL_DIRTY = PurePath.joinpath(DIST_FOLDER, "data_contacts_dirty.xlsx")
+
+FILE_MANUAL_CONTACTS_EXCEL = "manual_contacts.xlsx"
 
 
 def main():
     load_dotenv()
+
     logger = logging.getLogger()
     handler = logging.StreamHandler()
     formatter = logging.Formatter("%(asctime)s %(name)-12s %(levelname)-8s %(message)s")
@@ -21,12 +28,13 @@ def main():
     logger.addHandler(handler)
     logger.setLevel(logging.WARN)
 
-    DOWNLOAD_CONTACTS = False
+    DOWNLOAD_CONTACTS = True
     CONTACTS_CLEAN = True
     CONTACTS_EXPORT_XLSX = True
-    DOWNLOAD_PROFILE_PICTURES = False
+    DOWNLOAD_PROFILE_PICTURES = True
     GENERATE_REPORT = True
 
+    # FILE_CONTACTS
     if not os.path.isfile(FILE_CONTACTS_JSON) or DOWNLOAD_CONTACTS:
         # Download contacts if not available or if forced
         contacts = tablerworld.download.contacts()
@@ -37,12 +45,19 @@ def main():
         with open(FILE_CONTACTS_JSON, "r") as file_contacts:
             contacts = json.load(file_contacts)
 
+    # FILE_MANUAL_CONTACTS
+    if os.path.isfile(FILE_MANUAL_CONTACTS_EXCEL):
+        df_manual_contacts = pd.read_excel(FILE_MANUAL_CONTACTS_EXCEL)
+
     # Create Pandas dataframe
     df = pd.DataFrame(contacts)
 
+    # Save excel file DIRTY
+    # df.to_excel(FILE_CONTACTS_EXCEL_DIRTY, sheet_name="contacts", index=False)
+
     # Apply cleaning
     if CONTACTS_CLEAN:
-        df = tablerworld.contacts.clean(df)
+        df = tablerworld.contacts.clean(df, df_manual_contacts)
 
     # Save excel file
     if CONTACTS_EXPORT_XLSX:

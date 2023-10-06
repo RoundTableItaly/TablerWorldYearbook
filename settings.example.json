@@ -1,0 +1,50 @@
+{
+    "contacts": {
+        "yearbook_date": "2023-09-12",
+        "age_date": "2023-06-06",
+        "remove": {
+            "rt_status": ["resigned", "expulsed"],
+            "rt_club_number": [999, 998]
+        },
+        "recently_modified_contacts_from": "2023-09-15T05:00:00",
+        "recently_modified_contacts_from_2": "2023-09-06T05:00:00",
+        "positions": {
+            "national": {
+                "honorary_member": "VIP / Honorary Member",
+                "president": "Board / President",
+                "vice_president": "Board / Vice-President",
+                "cso": "Board / C.S.O.",
+                "pro": "Board Assistants / P.R.O.",
+                "rso": "Board Assistants / R.S.O.",
+                "iro": "Board / I.R.O.",
+                "shopkeeper": "Board Assistants / Shopkeeper",
+                "secretary": "Board Assistants / Secretary",
+                "treasurer": "Board / Treasurer",
+                "editor": "Board Assistants / Editor"
+            },
+            "area": {
+                "president": "Board / President",
+                "vice_president": "Board / Vice-President",
+                "past_president": "Board / Past-President",
+                "secretary": "Board / Secretary",
+                "treasurer": "Board / Treasurer",
+                "iro": "Board / I.R.O.",
+                "pro": "Board Assistants / P.R.O."
+            },
+            "club": {
+                "member": "Members / Member",
+                "honorary_member": "Members / Honorary Member",
+                "past_member": "Past Members / Past Member",
+                "past_president": "Board / Past-President",
+                "president": "Board / President",
+                "vice_president": "Board / Vice-President",
+                "secretary": "Board / Secretary",
+                "treasurer": "Board / Treasurer",
+                "cso": ["Board Assistants / C.S.O.", "Board / C.S.O."],
+                "iro": "Board / I.R.O.",
+                "pro": ["Board Assistants / P.R.O.", "Board / P.R.O."],
+                "webmaster": "Board Assistants / Webmaster"
+            }
+        }
+    }
+}

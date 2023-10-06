@@ -40,16 +40,15 @@
   }
 
   @top-center {
-    background: #fbc847;
-    content: '';
-    display: block;
-    height: .05cm;
-    opacity: .5;
+    content: string(heading3);
+    font-size: 9pt;
+    height: 1cm;
+    vertical-align: middle;
     width: 100%;
   }
 
   @top-right {
-    content: string(heading);
+    content: string(heading4);
     font-size: 9pt;
     height: 1cm;
     vertical-align: middle;
@@ -135,16 +134,17 @@ h4 {
 
 h2 {
   font-size: 28pt;
-  string-set: heading content();
 }
 
 h3 {
   font-weight: 300;
   font-size: 15pt;
+  string-set: heading3 content();
 }
 
 h4 {
   font-size: 13pt;
+  string-set: heading4 content();
 }
 
 #cover {
@@ -249,7 +249,8 @@ h4 {
 }
 
 #skills h4 {
-  margin: 0;
+  margin-top: 0;
+  margin-bottom: 0.05cm;
 }
 
 #skills h5 {
@@ -287,7 +288,6 @@ h4 {
 
 .club-item {
   flex: 0 0 100%;
-  margin-bottom: 1cm;
 }
 
 .club-item-logo {
