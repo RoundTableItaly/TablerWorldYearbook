@@ -181,6 +181,10 @@ def clean(df, df_manual_contacts):
         if honorary_member:
             return False
 
+        is_manual_contact = df["is_manual_contact"]
+        if is_manual_contact:
+            return False
+
         MEMBER = config.get("contacts").get("positions").get("club").get("member")
         is_member = False
 
@@ -200,6 +204,10 @@ def clean(df, df_manual_contacts):
             or is_honorary_member_for_year_national(df)
         )
         if honorary_member:
+            return False
+
+        is_manual_contact = df["is_manual_contact"]
+        if is_manual_contact:
             return False
 
         PAST_MEMBER = config.get("contacts").get("positions").get("club").get("past_member")
@@ -223,6 +231,10 @@ def clean(df, df_manual_contacts):
         if honorary_member:
             return False
 
+        is_manual_contact = df["is_manual_contact"]
+        if is_manual_contact:
+            return False
+
         MEMBER = config.get("contacts").get("positions").get("club").get("member")
         AGE_DATE = config.get("contacts").get("age_date")
         age_date_dt = datetime.datetime.strptime(AGE_DATE, "%Y-%m-%d").date()
@@ -235,7 +247,7 @@ def clean(df, df_manual_contacts):
 
         birth_date = df["birth_date"]
 
-        if pd.isna(birth_date) and not is_past_member(df):
+        if pd.isna(birth_date) and is_member:
             return True
 
         age = calculate_age(birth_date.date(), age_date_dt)
@@ -252,6 +264,10 @@ def clean(df, df_manual_contacts):
             or is_honorary_member_for_year_national(df)
         )
         if honorary_member:
+            return False
+
+        is_manual_contact = df["is_manual_contact"]
+        if is_manual_contact:
             return False
 
         MEMBER = config.get("contacts").get("positions").get("club").get("member")
@@ -275,6 +291,10 @@ def clean(df, df_manual_contacts):
         return is_member and under_25
 
     def is_honorary_member_in_memoriam_club(df):
+        is_manual_contact = df["is_manual_contact"]
+        if is_manual_contact:
+            return False
+
         HONORARY_MEMBER = config.get("contacts").get("positions").get("club").get("honorary_member")
         is_honorary_member_in_memoriam_club = False
 
@@ -286,6 +306,10 @@ def clean(df, df_manual_contacts):
         return is_honorary_member_in_memoriam_club
 
     def is_honorary_member_for_life_club(df):
+        is_manual_contact = df["is_manual_contact"]
+        if is_manual_contact:
+            return df["is_honorary_member_for_life_club"]
+
         HONORARY_MEMBER = config.get("contacts").get("positions").get("club").get("honorary_member")
         is_honorary_member_for_life_club = False
 
@@ -300,7 +324,7 @@ def clean(df, df_manual_contacts):
         HONORARY_MEMBER = config.get("contacts").get("positions").get("national").get("honorary_member")
         is_honorary_member_for_life_national = False
 
-        for pos in df["rt_global_positions_club"]:
+        for pos in df["rt_global_positions_national"]:
             if HONORARY_MEMBER in pos.get("position") and pd.isna(pos.get("end_date")) and not df["is_deceased"]:
                 is_honorary_member_for_life_national = True
                 break
@@ -308,6 +332,10 @@ def clean(df, df_manual_contacts):
         return is_honorary_member_for_life_national
 
     def is_honorary_member_for_year_club(df):
+        is_manual_contact = df["is_manual_contact"]
+        if is_manual_contact:
+            return False
+
         HONORARY_MEMBER = config.get("contacts").get("positions").get("club").get("honorary_member")
         is_honorary_member_for_year_club = False
 
@@ -322,7 +350,7 @@ def clean(df, df_manual_contacts):
         HONORARY_MEMBER = config.get("contacts").get("positions").get("national").get("honorary_member")
         is_honorary_member_for_year_national = False
 
-        for pos in df["rt_global_positions_club"]:
+        for pos in df["rt_global_positions_national"]:
             if HONORARY_MEMBER in pos.get("position") and not pd.isna(pos.get("end_date")) and not df["is_deceased"]:
                 is_honorary_member_for_year_national = True
                 break
@@ -330,7 +358,6 @@ def clean(df, df_manual_contacts):
         return is_honorary_member_for_year_national
 
     def has_membership_errors(df):
-        member_and_past_member = df["is_member"] and df["is_past_member"]
         age = df["is_member_over_25"] and df["is_member_under_25"]
         double_status_club = (
             0
@@ -340,11 +367,30 @@ def clean(df, df_manual_contacts):
             + df["is_honorary_member_for_year_national"]
         ) > 1
 
-        return member_and_past_member or age or double_status_club
+        member_and_past_member = df["is_member"] and df["is_past_member"]
+        member_status = (not df["is_member"]) and (df["is_member_over_25"] or df["is_member_under_25"])
+
+        return member_and_past_member or age or double_status_club and member_status
 
     # Merge manual contacts
     df_manual_contacts = pd.merge(
-        df_manual_contacts, df[["uname", "birth_date", "email", "phonenumbers", "profile_pic"]], how="left", on="uname"
+        df_manual_contacts,
+        df[
+            [
+                "uname",
+                "birth_date",
+                "email",
+                "phonenumbers",
+                "profile_pic",
+                "rt_global_positions",
+                "rt_local_positions",
+                "address",
+                "companies",
+                "custom_fields",
+            ]
+        ],
+        how="left",
+        on="uname",
     )
     df_manual_contacts = pd.merge(
         df_manual_contacts,
@@ -356,15 +402,7 @@ def clean(df, df_manual_contacts):
     df.reset_index(inplace=True, drop=True)
 
     # Replace nan values
-
-    def replace_with_list(x):
-        return x if isinstance(x, list) else []
-
-    df["rt_global_positions"] = df["rt_global_positions"].apply(replace_with_list)
-    df["rt_local_positions"] = df["rt_local_positions"].apply(replace_with_list)
-
-    df.fillna({"is_great_friend": False, "is_exempt_lucien_paradis": False}, inplace=True)
-
+    df.fillna({"is_great_friend": False}, inplace=True)
     df = df.replace({np.nan: None})
 
     # Clean dirty rows
@@ -372,14 +410,27 @@ def clean(df, df_manual_contacts):
     for club in config.get("contacts").get("remove").get("rt_club_number"):
         df.drop(df[df["rt_club_number"] == club].index, inplace=True)
 
+    # Remove contacts with no positions - MANUAL CONTACT DO NOT HAVE POSITIONS
+    # df = df[~df["rt_global_positions"].str.len().eq(0)].copy()
+
+    # Remove contacts in status expelled, resigned
+    for status in config.get("contacts").get("remove").get("rt_status"):
+        df.drop(df[df["rt_status"] == status].index, inplace=True)
+
     # Convert types
     df["is_great_friend"] = df["is_great_friend"].astype("bool")
-    df["is_exempt_lucien_paradis"] = df["is_exempt_lucien_paradis"].astype("bool")
+    df["is_manual_contact"] = df["is_manual_contact"].astype("bool")
     df["rt_club_number"] = df["rt_club_number"].astype("int")
     df["birth_date"] = pd.to_datetime(df["birth_date"])
     df["last_modified"] = pd.to_datetime(df["last_modified"]).dt.tz_localize(None)
     df["created_on"] = pd.to_datetime(df["created_on"]).dt.tz_localize(None)
     df["last_sync"] = pd.to_datetime(df["last_sync"]).dt.tz_localize(None)
+
+    # Recently modified contacts flag
+    df["recently_modified"] = df["last_modified"] > config.get("contacts").get("recently_modified_contacts_from")
+
+    # Create utility columns
+    df["profile_pic_file"] = df.apply(profile_pic_file, axis=1)
 
     # Apply
     df["first_name"] = df["first_name"].apply(clean_name)
@@ -407,18 +458,11 @@ def clean(df, df_manual_contacts):
     df["is_honorary_member_for_year_national"] = df.apply(is_honorary_member_for_year_national, axis=1)
     df["has_membership_errors"] = df.apply(has_membership_errors, axis=1)
 
-    # Remove contacts with no positions - MANUAL CONTACT DO NOT HAVE POSITIONS
-    # df = df[~df["rt_global_positions"].str.len().eq(0)].copy()
-
-    # Remove contacts in status expelled, resigned
-    for status in config.get("contacts").get("remove").get("rt_status"):
-        df.drop(df[df["rt_status"] == status].index, inplace=True)
-
-    # Recently modified contacts flag
-    df["recently_modified"] = df["last_modified"] > config.get("contacts").get("recently_modified_contacts_from")
-
-    # Create utility columns
-    df["profile_pic_file"] = df.apply(profile_pic_file, axis=1)
+    # Reorder columns
+    df["is_honorary_member_for_life_club"] = df.pop("is_honorary_member_for_life_club")
+    df["is_great_friend"] = df.pop("is_great_friend")
+    df["is_manual_contact"] = df.pop("is_manual_contact")
+    df["has_membership_errors"] = df.pop("has_membership_errors")
 
     print("Contacts clean ENDED")
     return df

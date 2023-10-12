@@ -228,19 +228,19 @@
                 </div>
 
                 <h5>SOCI ATTIVI</h5>
-                {% for row in get_tablers_club_pos(club.rt_club_number, "Members / Member") %} {{ m_tabler(row) }} {% endfor %}
+                {% for row in get_tablers(PositionRank.CLUB, club.rt_club_number, Membership.IS_MEMBER) %} {{ m_tabler(row) }} {% endfor %}
 
                 <h5>EX-SOCI FREQUENTATORI</h5>
-                {% for row in get_tablers_club_pos(club.rt_club_number, "Past Members / Past Member") %} {{ m_tabler(row) }} {% endfor %}
+                {% for row in get_tablers(PositionRank.CLUB, club.rt_club_number, Membership.IS_PAST_MEMBER) %} {{ m_tabler(row) }} {% endfor %}
 
                 <h5>MEMBRI ONORARI PER L'ANNO</h5>
-                {% for row in get_tablers_club_pos(club.rt_club_number, "Members / Honorary Member", hmfy=True) %} {{ m_tabler(row) }} {% endfor %}
+                {% for row in get_tablers(PositionRank.CLUB, club.rt_club_number, Membership.IS_HONORARY_MEMBER_FOR_YEAR_CLUB) %} {{ m_tabler(row) }} {% endfor %}
 
                 <h5>MEMBRI ONORARI A VITA</h5>
-                {% for row in get_tablers_club_pos(club.rt_club_number, "Members / Honorary Member", hmfl=True) %} {{ m_tabler(row) }} {% endfor %}
+                {% for row in get_tablers(PositionRank.CLUB, club.rt_club_number, Membership.IS_HONORARY_MEMBER_FOR_LIFE_CLUB) %} {{ m_tabler(row) }} {% endfor %}
 
                 <h5>MEMBRI ONORARI ALLA MEMORIA</h5>
-                {% for row in get_tablers_club_pos(club.rt_club_number, "Members / Honorary Member", is_deceased=True) %} {{ m_tabler(row) }} {% endfor %}
+                {% for row in get_tablers(PositionRank.CLUB, club.rt_club_number, Membership.IS_HONORARY_MEMBER_IN_MEMORIAM_CLUB) %} {{ m_tabler(row) }} {% endfor %}
 
                 <h5>GRANDI AMICI DI TAVOLA</h5>
                 <section>
