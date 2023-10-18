@@ -23,10 +23,10 @@ def main():
 
     logging.basicConfig(level=logging.WARN, format="%(asctime)s %(name)-12s %(levelname)-8s %(message)s")
 
-    DOWNLOAD_CONTACTS = False
+    DOWNLOAD_CONTACTS = True
     CONTACTS_CLEAN = True
     CONTACTS_EXPORT_XLSX = True
-    DOWNLOAD_PROFILE_PICTURES = False
+    DOWNLOAD_PROFILE_PICTURES = True
     GENERATE_REPORT = True
 
     if not os.path.isfile(FILE_CONTACTS_JSON) or DOWNLOAD_CONTACTS:
