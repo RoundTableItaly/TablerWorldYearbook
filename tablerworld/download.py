@@ -1,3 +1,4 @@
+from . import settings
 import os
 from pathlib import Path, PurePath
 import shutil
@@ -17,8 +18,11 @@ LINE_CLEAR = "\x1b[2K"
 
 
 def contacts():
-    API_BASE_URL = os.getenv("API_BASE_URL")
-    API_KEY = os.getenv("API_KEY")
+    # Read settings
+    config = settings.read()
+
+    API_BASE_URL = config.get("api").get("base_url")
+    API_KEY = config.get("api").get("key")
     API_AUTH_HEADER = {
         "Authorization": "Token {}".format(API_KEY),  # Add Peepl token
     }
@@ -38,7 +42,9 @@ def contacts():
         while get_next_page(next_page) is not None:
             try:
                 next_page_url = next_page.json()["next"]
-                next_page = session.get(next_page_url, params=querystring, headers=API_AUTH_HEADER)
+                next_page = session.get(
+                    next_page_url, params=querystring, headers=API_AUTH_HEADER
+                )
                 yield next_page
 
             except KeyError:
@@ -109,7 +115,9 @@ def profile_pictures(df):
     q.join()
 
     # Zip folder
-    shutil.make_archive(os.path.splitext(PROFILE_PICS_ZIP)[0], "zip", PROFILE_PICS_FOLDER)
+    shutil.make_archive(
+        os.path.splitext(PROFILE_PICS_ZIP)[0], "zip", PROFILE_PICS_FOLDER
+    )
 
     print(LINE_UP, end=LINE_CLEAR)
     print("Profile pictures download ENDED")
