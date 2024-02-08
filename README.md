@@ -16,7 +16,7 @@ TablerWorldYearbook
 
 ## Build exe
 
-    pipenv run pyinstaller -F -c .\main.py
+    pipenv run pyinstaller -F --windowed .\main.py
 
 ## Env
 

@@ -1,4 +1,8 @@
 {
+    "api": {
+        "base_url": "http://api.roundtable.world/v1/admin",
+        "key": "1234abcde"
+    },
     "contacts": {
         "yearbook_date": "2023-09-12",
         "age_date": "2023-06-06",
