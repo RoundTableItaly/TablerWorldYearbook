@@ -8,7 +8,7 @@
 
     <body>
         <article id="cover">
-            <h1>Report dati TablerWorld per Annuario Round Table Italia 2023/2024</h1>
+            <h1>Report dati TablerWorld per Annuario Round Table Italia</h1>
             <address>
                 <strong>Riccardo Dal Fiume</strong>
                 Editore Nazionale
@@ -51,7 +51,7 @@
             {% else %}
             <div>
                 {% if row.profile_pic_file %}
-                <img class="profile-pic" src="{{ DIST_FOLDER }}/profile_pics/{{ row.profile_pic_file }}" />
+                <img class="profile-pic" src="{{ OUTPUT_FOLDER }}/profile_pics/{{ row.profile_pic_file }}" />
                 {% else %}
                 <img class="profile-pic" src="{{ TEMPLATE_DIR }}/placeholder_M.png" />
                 {% endif %}
@@ -80,7 +80,7 @@
         <section class="tabler">
             <div>
                 {% if row.profile_pic_file %}
-                <img class="profile-pic" src="{{ DIST_FOLDER }}/profile_pics/{{ row.profile_pic_file }}" />
+                <img class="profile-pic" src="{{ OUTPUT_FOLDER }}/profile_pics/{{ row.profile_pic_file }}" />
                 {% else %}
                 <img class="profile-pic" src="{{ TEMPLATE_DIR }}/placeholder_M.png" />
                 {% endif %}
@@ -120,7 +120,7 @@
         <section class="tabler">
             <div>
                 {% if row.profile_pic_file %}
-                <img class="profile-pic" src="{{ DIST_FOLDER }}/profile_pics/{{ row.profile_pic_file }}" />
+                <img class="profile-pic" src="{{ OUTPUT_FOLDER }}/profile_pics/{{ row.profile_pic_file }}" />
                 {% else %}
                 <img class="profile-pic" src="{{ TEMPLATE_DIR }}/placeholder_M.png" />
                 {% endif %}
@@ -196,13 +196,13 @@
                         TAVOLA MADRINA: ROUND TABLE NN CITTA'<br />
                     </div>
                     <div class="club-item">
-                        <h5>RIUNIONI</h5>
+                        <h5>RIUNIONI (COMUNICATO DA PRESIDENTE DI TAVOLA)</h5>
                         1° martedì e 3° giovedì del mese<br />
                         Location – Indirizzo – CAP Città (PROVINCIA)<br />
                         +39 000 00000000<br />
                     </div>
                     <div class="club-item">
-                        <h5>RECAPITI DIGITALI</h5>
+                        <h5>RECAPITI DIGITALI (COMUNICATO DA PRESIDENTE DI TAVOLA)</h5>
                         nometavola@roundtable.it – nometavola@pecroundtable.it<br />
                         email_2 www.sitotavola.it<br />
                         (Instagram) -<br />
@@ -220,8 +220,8 @@
                             {% for tabler in get_tablers_club_pos(club.rt_club_number, "Board / I.R.O.") %}{{ tabler.first_name }} {{ tabler.last_name }}{% if not loop.last %}, {% endif %}{% endfor %} (C)<br />
                             {% for tabler in get_tablers_club_pos(club.rt_club_number, "Board / Treasurer") %}{{ tabler.first_name }} {{ tabler.last_name }}{% if not loop.last %}, {% endif %}{% endfor %} (T)<br />
                             {% for tabler in get_tablers_club_pos(club.rt_club_number, "Board / Secretary") %}{{ tabler.first_name }} {{ tabler.last_name }}{% if not loop.last %}, {% endif %}{% endfor %} (S)<br />
-                            <strong>COMUNICARE TRAMITE WEBFORM</strong> (CER)<br />
-                            <strong>COMUNICARE TRAMITE WEBFORM</strong> (GM)<br />
+                            <strong>COMUNICATO DA PRESIDENTE DI TAVOLA</strong> (CER)<br />
+                            <strong>COMUNICATO DA PRESIDENTE DI TAVOLA</strong> (GM)<br />
                             {% for tabler in get_tablers_club_pos(club.rt_club_number, "Board Assistants / Webmaster") %}{{ tabler.first_name }} {{ tabler.last_name }}{% if not loop.last %}, {% endif %}{% endfor %} (WM)<br />
                         </p>
                     </div>
@@ -245,7 +245,7 @@
                 <h5>GRANDI AMICI DI TAVOLA</h5>
                 <section>
                     <p>
-                        <strong>COMUNICARE TRAMITE WEBFORM</strong>
+                        <strong>COMUNICATO DA PRESIDENTE DI TAVOLA</strong>
                     </p>
                     {% for row in get_tablers(PositionRank.CLUB, club.rt_club_number, Membership.IS_GREAT_FRIEND) %} {{ m_tabler(row) }} {% endfor %}
                 </section>

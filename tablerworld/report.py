@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path, PurePath
 from jinja2 import Environment, PackageLoader, select_autoescape
 import weasyprint
@@ -5,17 +6,19 @@ import pandas as pd
 
 from .contacts import Membership, PositionRank
 
+logger = logging.getLogger("TablerWordYearbook")
+
 MODULE_PATH = Path(__file__).parent
 TEMPLATE_DIR = PurePath.joinpath(MODULE_PATH, "templates", "report")
 TEMPLATE_CSS = PurePath.joinpath(TEMPLATE_DIR, "report.css")
 
-DIST_FOLDER = PurePath.joinpath(Path(MODULE_PATH).parent, "dist")
-OUTPUT_PDF = PurePath.joinpath(DIST_FOLDER, "report.pdf")
-OUTPUT_HTML = PurePath.joinpath(DIST_FOLDER, "report.html")
+OUTPUT_FOLDER = PurePath.joinpath(Path(MODULE_PATH).parent, "output")
+OUTPUT_PDF = PurePath.joinpath(OUTPUT_FOLDER, "report.pdf")
+OUTPUT_HTML = PurePath.joinpath(OUTPUT_FOLDER, "report.html")
 
 
 def report(df):
-    print("Report generation STARTED")
+    logger.info("Report generation STARTED")
 
     areas = (
         df[["rt_area_name", "rt_area_subdomain"]]
@@ -90,7 +93,7 @@ def report(df):
             case PositionRank.ANY:
                 tablers = df
             case _:  # wildcard - simile ad un else, deve stare alla fine
-                print("Unknown error")
+                logger.info("Unknown error")
 
         tablers = tablers.loc[df[membership.value] == True].reset_index()
 
@@ -104,7 +107,7 @@ def report(df):
         lstrip_blocks=True,
     )
     env.globals["TEMPLATE_DIR"] = TEMPLATE_DIR.as_uri()
-    env.globals["DIST_FOLDER"] = DIST_FOLDER.as_uri()
+    env.globals["OUTPUT_FOLDER"] = OUTPUT_FOLDER.as_uri()
 
     # HTML
     template = env.get_template("report/report.html")
@@ -125,7 +128,7 @@ def report(df):
     with open(OUTPUT_HTML, "wb") as f:
         f.write(template_rendered.encode("utf-8"))
 
-    # Weasy print
+    # Weasyprint
     weasyprint.DEFAULT_OPTIONS["dpi"] = 200
     weasyprint.DEFAULT_OPTIONS["presentational_hints"] = True
 
@@ -135,4 +138,4 @@ def report(df):
 
     html.write_pdf(OUTPUT_PDF, stylesheets=[css], font_config=font_config)
 
-    print("Report generation ENDED")
+    logger.info("Report generation ENDED")
