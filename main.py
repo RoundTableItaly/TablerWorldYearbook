@@ -7,47 +7,24 @@ import json
 import os
 import pandas as pd
 
-import tkinter as tk
+import threading
+from tkinter import *
+from tkinter import ttk
 
+
+logger = logging.getLogger("TablerWordYearbook")
 
 MODULE_PATH = Path(__file__).parent
-DIST_FOLDER = Path(MODULE_PATH, "dist")
+OUTPUT_FOLDER = Path(MODULE_PATH, "output")
 
-FILE_CONTACTS_JSON = Path(DIST_FOLDER, "data_contacts.json")
-FILE_CONTACTS_EXCEL = Path(DIST_FOLDER, "data_contacts.xlsx")
-FILE_CONTACTS_EXCEL_DIRTY = Path(DIST_FOLDER, "data_contacts_dirty.xlsx")
+FILE_CONTACTS_JSON = Path(OUTPUT_FOLDER, "data_contacts.json")
+FILE_CONTACTS_EXCEL = Path(OUTPUT_FOLDER, "data_contacts.xlsx")
+FILE_CONTACTS_EXCEL_DIRTY = Path(OUTPUT_FOLDER, "data_contacts_dirty.xlsx")
 
 FILE_MANUAL_CONTACTS_EXCEL = "manual_contacts.xlsx"
 
 
-DOWNLOAD_CONTACTS = True
-CONTACTS_CLEAN = True
-CONTACTS_EXPORT_XLSX = True
-DOWNLOAD_PROFILE_PICTURES = False
-GENERATE_REPORT = True
-
-
-def main():
-    window = tk.Tk()
-    window.geometry("600x600")
-    window.title("Hello TkInter!")
-
-    def first_print():
-        text = "Hello World!"
-        text_output = tk.Label(window, text=text, fg="red", font=("Helvetica", 16))
-        text_output.grid(row=0, column=1)
-
-    first_button = tk.Button(text="Saluta!", command=first_print)
-    first_button.grid(row=0, column=0)
-
-    window.mainloop()
-
-
-def main_2():
-    logging.basicConfig(
-        level=logging.WARN, format="%(asctime)s %(name)-12s %(levelname)-8s %(message)s"
-    )
-
+def execute(DOWNLOAD_CONTACTS, CONTACTS_CLEAN, CONTACTS_EXPORT_XLSX, DOWNLOAD_PROFILE_PICTURES, GENERATE_REPORT):
     if not os.path.isfile(FILE_CONTACTS_JSON) or DOWNLOAD_CONTACTS:
         contacts = tablerworld.download.contacts()
         with open(FILE_CONTACTS_JSON, "w") as file_contacts:
@@ -65,13 +42,129 @@ def main_2():
         df = tablerworld.contacts.clean(df, df_manual_contacts)
 
     if CONTACTS_EXPORT_XLSX:
+        logger.info("Export Excel STARTED")
         df.to_excel(FILE_CONTACTS_EXCEL, sheet_name="contacts", index=False)
+        logger.info("Export Excel ENDED")
 
     if DOWNLOAD_PROFILE_PICTURES:
         tablerworld.download.profile_pictures(df)
 
     if GENERATE_REPORT:
         tablerworld.report.report(df)
+
+    return
+
+
+def main():
+
+    # tkinter
+    root = Tk()
+    root.title("TablerWorldYearbook")
+    root.resizable(width=False, height=False)
+
+    mainframe = ttk.Frame(root, padding="3 3 12 12")
+    mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
+    root.columnconfigure(0, weight=1)
+    root.rowconfigure(0, weight=1)
+
+    DOWNLOAD_CONTACTS = BooleanVar(value=True)
+    check_dowload_contacts = ttk.Checkbutton(
+        mainframe,
+        text="Download contacts",
+        variable=DOWNLOAD_CONTACTS,
+        onvalue=True,
+        offvalue=False,
+    ).grid(column=1, row=1, sticky=W)
+
+    CONTACTS_CLEAN = BooleanVar(value=True)
+    check_contacts_clean = ttk.Checkbutton(
+        mainframe,
+        text="Clean contacts",
+        variable=CONTACTS_CLEAN,
+        onvalue=True,
+        offvalue=False,
+    ).grid(column=1, row=2, sticky=W)
+
+    CONTACTS_EXPORT_XLSX = BooleanVar(value=True)
+    check_contacts_export_xlsx = ttk.Checkbutton(
+        mainframe,
+        text="Export contacts Excel",
+        variable=CONTACTS_EXPORT_XLSX,
+        onvalue=True,
+        offvalue=False,
+    ).grid(column=1, row=3, sticky=W)
+
+    DOWNLOAD_PROFILE_PICTURES = BooleanVar(value=True)
+    check_download_profile_pictures = ttk.Checkbutton(
+        mainframe,
+        text="Download profile pictures",
+        variable=DOWNLOAD_PROFILE_PICTURES,
+        onvalue=True,
+        offvalue=False,
+    ).grid(column=1, row=4, sticky=W)
+
+    GENERATE_REPORT = BooleanVar(value=True)
+    check_generate_report = ttk.Checkbutton(
+        mainframe,
+        text="Generate report",
+        variable=GENERATE_REPORT,
+        onvalue=True,
+        offvalue=False,
+    ).grid(column=1, row=5, sticky=W)
+
+    ttk.Button(
+        mainframe,
+        text="Execute",
+        command=lambda: threading.Thread(
+            target=execute,
+            args=(
+                DOWNLOAD_CONTACTS.get(),
+                CONTACTS_CLEAN.get(),
+                CONTACTS_EXPORT_XLSX.get(),
+                DOWNLOAD_PROFILE_PICTURES.get(),
+                GENERATE_REPORT.get(),
+            ),
+        ).start(),
+    ).grid(column=1, row=6, sticky=W)
+
+    for child in mainframe.winfo_children():
+        child.grid_configure(padx=5, pady=5)
+
+    text_log = Text(mainframe, width=150, height=30, wrap="none")
+    ys = ttk.Scrollbar(mainframe, orient="vertical", command=text_log.yview)
+    xs = ttk.Scrollbar(mainframe, orient="horizontal", command=text_log.xview)
+    text_log["yscrollcommand"] = ys.set
+    text_log["xscrollcommand"] = xs.set
+    text_log.grid(column=1, row=7, padx=(5, 0), pady=(5, 0), sticky="NEWS")
+    xs.grid(column=1, row=8, sticky="we")
+    ys.grid(column=2, row=7, sticky="ns")
+
+    # Logging
+    class MyHandlerText(logging.StreamHandler):
+        def __init__(self, textctrl):
+            logging.StreamHandler.__init__(self)  # initialize parent
+            self.textctrl = textctrl
+
+        def emit(self, record):
+            msg = self.format(record)
+            self.textctrl.config(state="normal")
+            self.textctrl.insert("end", msg + "\n")
+            self.flush()
+            self.textctrl.config(state="disabled")
+
+    log_format = logging.Formatter(fmt="%(asctime)s %(name)-12s %(levelname)-8s %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
+
+    stderrHandler = logging.StreamHandler()  # no arguments => stderr
+    # stderrHandler.setFormatter(log_format)
+
+    guiHandler = MyHandlerText(text_log)
+    guiHandler.setFormatter(log_format)
+
+    logger.addHandler(stderrHandler)
+    logger.addHandler(guiHandler)
+    logger.setLevel(logging.INFO)
+
+    root.mainloop()
 
 
 if __name__ == "__main__":

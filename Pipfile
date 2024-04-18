@@ -5,16 +5,14 @@ name = "pypi"
 
 [packages]
 pyinstaller = "*"
-python-dotenv = "*"
 requests = "*"
 pandas = "*"
 openpyxl = "*"
 phonenumbers = "*"
 weasyprint = "*"
 jinja2 = "*"
-sourcery = "*"
 
 [dev-packages]
 
 [requires]
-python_version = "3.11"
+python_version = "3.12"

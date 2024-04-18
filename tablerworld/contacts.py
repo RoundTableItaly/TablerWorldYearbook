@@ -1,4 +1,5 @@
 from . import settings
+import logging
 import pandas as pd
 import phonenumbers
 import datetime
@@ -6,6 +7,8 @@ import math
 from enum import Enum
 import numpy as np
 import re
+
+logger = logging.getLogger("TablerWordYearbook")
 
 
 class PositionRank(Enum):
@@ -30,18 +33,11 @@ class Membership(Enum):
 
 
 def calculate_age(birth_date, reference_date):
-    return (
-        reference_date.year
-        - birth_date.year
-        - (
-            (reference_date.month, reference_date.day)
-            < (birth_date.month, birth_date.day)
-        )
-    )
+    return reference_date.year - birth_date.year - ((reference_date.month, reference_date.day) < (birth_date.month, birth_date.day))
 
 
 def clean(df, df_manual_contacts):
-    print("Contacts clean STARTED")
+    logger.info("Contacts clean STARTED")
 
     # Read settings
     config = settings.read()
@@ -71,9 +67,7 @@ def clean(df, df_manual_contacts):
 
         phone = phone.encode("ascii", errors="ignore").decode()
         phone_parsed = phonenumbers.parse(phone, "IT")
-        phone_international = phonenumbers.format_number(
-            phone_parsed, phonenumbers.PhoneNumberFormat.INTERNATIONAL
-        )
+        phone_international = phonenumbers.format_number(phone_parsed, phonenumbers.PhoneNumberFormat.INTERNATIONAL)
         return phone_international
 
     def email(cell):
@@ -128,9 +122,7 @@ def clean(df, df_manual_contacts):
         if not member_info:
             return None
 
-        name_partner = [
-            x for x in member_info[0].get("rows") if x.get("key") == "Name partner"
-        ]
+        name_partner = [x for x in member_info[0].get("rows") if x.get("key") == "Name partner"]
         return name_partner[0].get("value") if name_partner else None
 
     def profile_pic_file(df):
@@ -229,9 +221,7 @@ def clean(df, df_manual_contacts):
         if is_manual_contact:
             return False
 
-        PAST_MEMBER = (
-            config.get("contacts").get("positions").get("club").get("past_member")
-        )
+        PAST_MEMBER = config.get("contacts").get("positions").get("club").get("past_member")
         is_past_member = False
 
         for pos in df["rt_global_positions_club"]:
@@ -316,17 +306,11 @@ def clean(df, df_manual_contacts):
         if is_manual_contact:
             return False
 
-        HONORARY_MEMBER = (
-            config.get("contacts").get("positions").get("club").get("honorary_member")
-        )
+        HONORARY_MEMBER = config.get("contacts").get("positions").get("club").get("honorary_member")
         is_honorary_member_in_memoriam_club = False
 
         for pos in df["rt_global_positions_club"]:
-            if (
-                HONORARY_MEMBER in pos.get("position")
-                and pd.isna(pos.get("end_date"))
-                and df["is_deceased"]
-            ):
+            if HONORARY_MEMBER in pos.get("position") and pd.isna(pos.get("end_date")) and df["is_deceased"]:
                 is_honorary_member_in_memoriam_club = True
                 break
 
@@ -337,37 +321,22 @@ def clean(df, df_manual_contacts):
         if is_manual_contact:
             return df["is_honorary_member_for_life_club"]
 
-        HONORARY_MEMBER = (
-            config.get("contacts").get("positions").get("club").get("honorary_member")
-        )
+        HONORARY_MEMBER = config.get("contacts").get("positions").get("club").get("honorary_member")
         is_honorary_member_for_life_club = False
 
         for pos in df["rt_global_positions_club"]:
-            if (
-                HONORARY_MEMBER in pos.get("position")
-                and pd.isna(pos.get("end_date"))
-                and not df["is_deceased"]
-            ):
+            if HONORARY_MEMBER in pos.get("position") and pd.isna(pos.get("end_date")) and not df["is_deceased"]:
                 is_honorary_member_for_life_club = True
                 break
 
         return is_honorary_member_for_life_club
 
     def is_honorary_member_for_life_national(df):
-        HONORARY_MEMBER = (
-            config.get("contacts")
-            .get("positions")
-            .get("national")
-            .get("honorary_member")
-        )
+        HONORARY_MEMBER = config.get("contacts").get("positions").get("national").get("honorary_member")
         is_honorary_member_for_life_national = False
 
         for pos in df["rt_global_positions_national"]:
-            if (
-                HONORARY_MEMBER in pos.get("position")
-                and pd.isna(pos.get("end_date"))
-                and not df["is_deceased"]
-            ):
+            if HONORARY_MEMBER in pos.get("position") and pd.isna(pos.get("end_date")) and not df["is_deceased"]:
                 is_honorary_member_for_life_national = True
                 break
 
@@ -378,37 +347,22 @@ def clean(df, df_manual_contacts):
         if is_manual_contact:
             return False
 
-        HONORARY_MEMBER = (
-            config.get("contacts").get("positions").get("club").get("honorary_member")
-        )
+        HONORARY_MEMBER = config.get("contacts").get("positions").get("club").get("honorary_member")
         is_honorary_member_for_year_club = False
 
         for pos in df["rt_global_positions_club"]:
-            if (
-                HONORARY_MEMBER in pos.get("position")
-                and not pd.isna(pos.get("end_date"))
-                and not df["is_deceased"]
-            ):
+            if HONORARY_MEMBER in pos.get("position") and not pd.isna(pos.get("end_date")) and not df["is_deceased"]:
                 is_honorary_member_for_year_club = True
                 break
 
         return is_honorary_member_for_year_club
 
     def is_honorary_member_for_year_national(df):
-        HONORARY_MEMBER = (
-            config.get("contacts")
-            .get("positions")
-            .get("national")
-            .get("honorary_member")
-        )
+        HONORARY_MEMBER = config.get("contacts").get("positions").get("national").get("honorary_member")
         is_honorary_member_for_year_national = False
 
         for pos in df["rt_global_positions_national"]:
-            if (
-                HONORARY_MEMBER in pos.get("position")
-                and not pd.isna(pos.get("end_date"))
-                and not df["is_deceased"]
-            ):
+            if HONORARY_MEMBER in pos.get("position") and not pd.isna(pos.get("end_date")) and not df["is_deceased"]:
                 is_honorary_member_for_year_national = True
                 break
 
@@ -425,9 +379,7 @@ def clean(df, df_manual_contacts):
         ) > 1
 
         member_and_past_member = df["is_member"] and df["is_past_member"]
-        member_status = (not df["is_member"]) and (
-            df["is_member_over_25"] or df["is_member_under_25"]
-        )
+        member_status = (not df["is_member"]) and (df["is_member_over_25"] or df["is_member_under_25"])
 
         return member_and_past_member or age or double_status_club and member_status
 
@@ -494,9 +446,7 @@ def clean(df, df_manual_contacts):
     df["last_sync"] = pd.to_datetime(df["last_sync"]).dt.tz_localize(None)
 
     # Recently modified contacts flag
-    df["recently_modified"] = df["last_modified"] > config.get("contacts").get(
-        "recently_modified_contacts_from"
-    )
+    df["recently_modified"] = df["last_modified"] > config.get("contacts").get("recently_modified_contacts_from")
 
     # Create utility columns
     df["profile_pic_file"] = df.apply(profile_pic_file, axis=1)
@@ -512,35 +462,19 @@ def clean(df, df_manual_contacts):
 
     df["rt_local_positions"] = df["rt_local_positions"].apply(rt_positions_current)
     df["rt_global_positions"] = df["rt_global_positions"].apply(rt_positions_current)
-    df["rt_global_positions_national"] = df["rt_global_positions"].apply(
-        rt_global_positions, args=(PositionRank.NATIONAL,)
-    )
-    df["rt_global_positions_area"] = df["rt_global_positions"].apply(
-        rt_global_positions, args=(PositionRank.AREA,)
-    )
-    df["rt_global_positions_club"] = df["rt_global_positions"].apply(
-        rt_global_positions, args=(PositionRank.CLUB,)
-    )
+    df["rt_global_positions_national"] = df["rt_global_positions"].apply(rt_global_positions, args=(PositionRank.NATIONAL,))
+    df["rt_global_positions_area"] = df["rt_global_positions"].apply(rt_global_positions, args=(PositionRank.AREA,))
+    df["rt_global_positions_club"] = df["rt_global_positions"].apply(rt_global_positions, args=(PositionRank.CLUB,))
 
     df["is_member"] = df.apply(is_member, axis=1)
     df["is_past_member"] = df.apply(is_past_member, axis=1)
     df["is_member_over_25"] = df.apply(is_member_over_25, axis=1)
     df["is_member_under_25"] = df.apply(is_member_under_25, axis=1)
-    df["is_honorary_member_in_memoriam_club"] = df.apply(
-        is_honorary_member_in_memoriam_club, axis=1
-    )
-    df["is_honorary_member_for_life_club"] = df.apply(
-        is_honorary_member_for_life_club, axis=1
-    )
-    df["is_honorary_member_for_life_national"] = df.apply(
-        is_honorary_member_for_life_national, axis=1
-    )
-    df["is_honorary_member_for_year_club"] = df.apply(
-        is_honorary_member_for_year_club, axis=1
-    )
-    df["is_honorary_member_for_year_national"] = df.apply(
-        is_honorary_member_for_year_national, axis=1
-    )
+    df["is_honorary_member_in_memoriam_club"] = df.apply(is_honorary_member_in_memoriam_club, axis=1)
+    df["is_honorary_member_for_life_club"] = df.apply(is_honorary_member_for_life_club, axis=1)
+    df["is_honorary_member_for_life_national"] = df.apply(is_honorary_member_for_life_national, axis=1)
+    df["is_honorary_member_for_year_club"] = df.apply(is_honorary_member_for_year_club, axis=1)
+    df["is_honorary_member_for_year_national"] = df.apply(is_honorary_member_for_year_national, axis=1)
     df["has_membership_errors"] = df.apply(has_membership_errors, axis=1)
 
     # Reorder columns
@@ -549,5 +483,5 @@ def clean(df, df_manual_contacts):
     df["is_manual_contact"] = df.pop("is_manual_contact")
     df["has_membership_errors"] = df.pop("has_membership_errors")
 
-    print("Contacts clean ENDED")
+    logger.info("Contacts clean ENDED")
     return df

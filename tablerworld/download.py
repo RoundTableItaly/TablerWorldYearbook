@@ -1,4 +1,5 @@
 from . import settings
+import logging
 import os
 from pathlib import Path, PurePath
 import shutil
@@ -8,10 +9,13 @@ import threading
 import queue
 import traceback
 
+logger = logging.getLogger("TablerWordYearbook")
+
+
 MODULE_PATH = Path(__file__).parent
-DIST_FOLDER = PurePath.joinpath(Path(MODULE_PATH).parent, "dist")
-PROFILE_PICS_FOLDER = PurePath.joinpath(DIST_FOLDER, "profile_pics")
-PROFILE_PICS_ZIP = PurePath.joinpath(DIST_FOLDER, "profile_pics.zip")
+OUTPUT_FOLDER = PurePath.joinpath(Path(MODULE_PATH).parent, "output")
+PROFILE_PICS_FOLDER = PurePath.joinpath(OUTPUT_FOLDER, "profile_pics")
+PROFILE_PICS_ZIP = PurePath.joinpath(OUTPUT_FOLDER, "profile_pics.zip")
 
 LINE_UP = "\033[1A"
 LINE_CLEAR = "\x1b[2K"
@@ -27,7 +31,7 @@ def contacts():
         "Authorization": "Token {}".format(API_KEY),  # Add Peepl token
     }
 
-    print("Contacts download STARTED")
+    logger.info("Contacts download STARTED")
 
     def contacts_step():
         session = requests.Session()
@@ -42,9 +46,7 @@ def contacts():
         while get_next_page(next_page) is not None:
             try:
                 next_page_url = next_page.json()["next"]
-                next_page = session.get(
-                    next_page_url, params=querystring, headers=API_AUTH_HEADER
-                )
+                next_page = session.get(next_page_url, params=querystring, headers=API_AUTH_HEADER)
                 yield next_page
 
             except KeyError:
@@ -59,14 +61,14 @@ def contacts():
     for index, page in enumerate(contacts_step()):
         results.extend(page.json()["results"])
         records = len(page.json()["results"])
-        print(f"request {index} - records {records} - status {page.status_code}")
+        logger.info(f"request {index} - records {records} - status {page.status_code}")
 
-    print("Contacts download ENDED")
+    logger.info("Contacts download ENDED")
     return results
 
 
 def profile_pictures(df):
-    print("Profile pictures download STARTED\n")
+    logger.info("Profile pictures download STARTED\n")
     # Prepare folder
     shutil.rmtree(PROFILE_PICS_FOLDER, ignore_errors=True)
     os.makedirs(PROFILE_PICS_FOLDER, exist_ok=True)
@@ -85,15 +87,15 @@ def profile_pictures(df):
                 item = q.get()
                 pic_id = item["profile_pic_file"]
 
-                print(LINE_UP, end=LINE_CLEAR)
-                print(f"Download profile_pic {pic_id}")
+                # print(LINE_UP, end=LINE_CLEAR)
+                logger.info(f"Download profile_pic {pic_id}")
 
                 r = requests.get(item["profile_pic"])
                 with open(PurePath.joinpath(PROFILE_PICS_FOLDER, pic_id), "wb") as f:
                     f.write(r.content)
 
             except Exception:
-                print(traceback.format_exc())
+                logger.info(traceback.format_exc())
                 while not q.empty():
                     try:
                         q.get(block=False)
@@ -115,11 +117,9 @@ def profile_pictures(df):
     q.join()
 
     # Zip folder
-    shutil.make_archive(
-        os.path.splitext(PROFILE_PICS_ZIP)[0], "zip", PROFILE_PICS_FOLDER
-    )
+    shutil.make_archive(os.path.splitext(PROFILE_PICS_ZIP)[0], "zip", PROFILE_PICS_FOLDER)
 
-    print(LINE_UP, end=LINE_CLEAR)
-    print("Profile pictures download ENDED")
+    # print(LINE_UP, end=LINE_CLEAR)
+    logger.info("Profile pictures download ENDED")
 
     return

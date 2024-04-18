@@ -16,13 +16,11 @@ TablerWorldYearbook
 
 ## Build exe
 
-    pipenv run pyinstaller -F --windowed .\main.py
+    pipenv run pyinstaller -F --onefile --name TablerWorldYearbook .\main.py
 
-## Env
+## settings.json
 
-    Create a file named `.env` and add the following lines, taking care of modifying the values.
+Get the API key from the menu Settings > API tokens.
 
-```
     API_BASE_URL=http://api.roundtable.world/v1/admin
     API_KEY=abcdefghijklmnopq
-```
