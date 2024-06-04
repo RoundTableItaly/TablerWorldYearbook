@@ -15,25 +15,26 @@
             </address>
             <address>
                 <strong>editore@roundtable.it</strong>
-                https://www.roundtable.it
+                https://www.roundtable.it <br />
+                {{dt_string}}
             </address>
         </article>
 
         <article id="contents">
             <h2>Contenuti</h2>
-            <h3 href="#comitato-nazionale">Comitato Nazionale</h3>
+            <h3 class="heading3" href="#comitato-nazionale">Comitato Nazionale</h3>
             <ul>
                 <li><a href="#comitato-nazionale"></a></li>
             </ul>
 
-            <h3>Zone</h3>
+            <h3 class="heading3">Zone</h3>
             <ul>
                 {% for area in areas %}
                 <li><a href="#{{ area.rt_area_subdomain }}"></a></li>
                 {% endfor %}
             </ul>
 
-            <h3>Tavole</h3>
+            <h3 class="heading3">Tavole</h3>
             <ul>
                 {% for club in clubs %}
                 <li><a href="#{{ club.rt_club_subdomain }}"></a></li>
@@ -144,7 +145,7 @@
         <article id="skills">
             <section class="national">
                 <!-- National frontpage -->
-                <h3 id="comitato-nazionale">Comitato Nazionale</h3>
+                <h3 class="heading3" id="comitato-nazionale">Comitato Nazionale</h3>
 
                 <!-- -->{{ m_national_tabler("Presidente Nazionale", "presidente@roundtable.it", "presidente@pecroundtable.it", get_tabler_national_pos("Board / President")) }}
                 <!-- -->{{ m_national_tabler("Vice Presidente Nazionale", "vicepresidente@roundtable.it", "vicepresidente@pecroundtable.it", get_tabler_national_pos("Board / Vice-President")) }}
@@ -176,7 +177,7 @@
             {% for area in clubs_in_areas %}
             <section class="areas">
                 <!-- Area frontpage -->
-                <h3 id="{{ area.rt_area_subdomain }}">Round Table {{ area.rt_area_name }}</h3>
+                <h3 class="heading3" id="{{ area.rt_area_subdomain }}">Round Table {{ area.rt_area_name }}</h3>
                 {{ m_area(area)}}
             </section>
             {% endfor %}
@@ -188,10 +189,10 @@
                     <div class="club-item-logo">
                         <div class="club-logo-placeholder"></div>
                     </div>
-                    <h4 class="club-item" id="{{ club.rt_club_subdomain }}">{{ club.rt_club_name }}</h4>
+                    <h4 class="heading4" class="club-item" id="{{ club.rt_club_subdomain }}">{{ club.rt_club_name }}</h4>
 
                     <div class="club-item">
-                        {{ club.rt_area_name }}<br />
+                        <span class="heading3">{{ club.rt_area_name }}</span><br />
                         CHARTER MEETING: 01 GENNAIO 1900<br />
                         TAVOLA MADRINA: ROUND TABLE NN CITTA'<br />
                     </div>
