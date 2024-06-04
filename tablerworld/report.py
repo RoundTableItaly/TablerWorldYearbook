@@ -3,6 +3,7 @@ from pathlib import Path, PurePath
 from jinja2 import Environment, PackageLoader, select_autoescape
 import weasyprint
 import pandas as pd
+from datetime import datetime
 
 from .contacts import Membership, PositionRank
 
@@ -123,6 +124,7 @@ def report(df):
         get_tabler_area_pos=get_tabler_area_pos,
         get_tabler_national_pos=get_tabler_national_pos,
         get_tablers=get_tablers,
+        dt_string=datetime.now().strftime("%Y/%m/%d %H:%M:%S"),
     )
     # HTML write to file
     with open(OUTPUT_HTML, "wb") as f:

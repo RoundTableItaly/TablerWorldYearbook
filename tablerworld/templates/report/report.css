@@ -139,11 +139,17 @@ h2 {
 h3 {
   font-weight: 300;
   font-size: 15pt;
+}
+
+.heading3 {
   string-set: heading3 content();
 }
 
 h4 {
   font-size: 13pt;
+}
+
+.heading4 {
   string-set: heading4 content();
 }
 
