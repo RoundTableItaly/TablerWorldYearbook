@@ -1,9 +1,15 @@
 import json
-from pathlib import Path, PurePath
+from pathlib import Path
+import sys
 
 
-MODULE_PATH = Path(__file__).parent
-SETTINGS_JSON = PurePath.joinpath(MODULE_PATH.parent, "settings.json")
+# determine if application is a script file or frozen exe
+if getattr(sys, "frozen", False):
+    APPLICATION_PATH = Path(sys.executable).parent
+else:
+    APPLICATION_PATH = Path(__file__).parent.parent
+
+SETTINGS_JSON = APPLICATION_PATH / "settings.json"
 
 
 def read():

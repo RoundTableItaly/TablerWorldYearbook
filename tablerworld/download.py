@@ -1,6 +1,7 @@
 from . import settings
 import logging
 import os
+import sys
 from pathlib import Path, PurePath
 import shutil
 import requests
@@ -12,10 +13,14 @@ import traceback
 logger = logging.getLogger("TablerWordYearbook")
 
 
-MODULE_PATH = Path(__file__).parent
-OUTPUT_FOLDER = PurePath.joinpath(Path(MODULE_PATH).parent, "output")
-PROFILE_PICS_FOLDER = PurePath.joinpath(OUTPUT_FOLDER, "profile_pics")
-PROFILE_PICS_ZIP = PurePath.joinpath(OUTPUT_FOLDER, "profile_pics.zip")
+# determine if application is a script file or frozen exe
+if getattr(sys, "frozen", False):
+    APPLICATION_PATH = Path(sys.executable).parent
+else:
+    APPLICATION_PATH = Path(__file__).parent.parent
+
+PROFILE_PICS_FOLDER = APPLICATION_PATH / "output" / "profile_pics"
+PROFILE_PICS_ZIP = APPLICATION_PATH / "output" / "profile_pics.zip"
 
 LINE_UP = "\033[1A"
 LINE_CLEAR = "\x1b[2K"
