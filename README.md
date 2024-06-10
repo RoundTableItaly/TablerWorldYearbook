@@ -16,7 +16,7 @@ TablerWorldYearbook
 
 ## Build exe
 
-    pipenv run pyinstaller -F --onefile --name TablerWorldYearbook .\main.py
+    pipenv run pyinstaller -y TablerWorldYearbook.spec
 
 ## settings.json
 

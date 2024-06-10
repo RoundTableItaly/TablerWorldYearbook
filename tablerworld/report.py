@@ -1,6 +1,7 @@
 import logging
+import sys
 from pathlib import Path, PurePath
-from jinja2 import Environment, PackageLoader, select_autoescape
+from jinja2 import Environment, FileSystemLoader, select_autoescape
 import weasyprint
 import pandas as pd
 from datetime import datetime
@@ -9,13 +10,21 @@ from .contacts import Membership, PositionRank
 
 logger = logging.getLogger("TablerWordYearbook")
 
-MODULE_PATH = Path(__file__).parent
-TEMPLATE_DIR = PurePath.joinpath(MODULE_PATH, "templates", "report")
-TEMPLATE_CSS = PurePath.joinpath(TEMPLATE_DIR, "report.css")
 
-OUTPUT_FOLDER = PurePath.joinpath(Path(MODULE_PATH).parent, "output")
-OUTPUT_PDF = PurePath.joinpath(OUTPUT_FOLDER, "report.pdf")
-OUTPUT_HTML = PurePath.joinpath(OUTPUT_FOLDER, "report.html")
+# determine if application is a script file or frozen exe
+if getattr(sys, "frozen", False):
+    APPLICATION_PATH = Path(sys.executable).parent
+else:
+    APPLICATION_PATH = Path(__file__).parent.parent
+
+
+OUTPUT_FOLDER = APPLICATION_PATH / "output"
+OUTPUT_PDF = APPLICATION_PATH / "output" / "report.pdf"
+OUTPUT_HTML = APPLICATION_PATH / "output" / "report.html"
+
+MAIN_PATH = Path(__file__).parent.parent
+TEMPLATE_DIR = MAIN_PATH / "templates" / "report"
+TEMPLATE_CSS = MAIN_PATH / "templates" / "report" / "report.css"
 
 
 def report(df):
@@ -102,7 +111,7 @@ def report(df):
 
     # Jinja
     env = Environment(
-        loader=PackageLoader("tablerworld"),
+        loader=FileSystemLoader(TEMPLATE_DIR),
         autoescape=select_autoescape(),
         trim_blocks=True,
         lstrip_blocks=True,
@@ -111,7 +120,7 @@ def report(df):
     env.globals["OUTPUT_FOLDER"] = OUTPUT_FOLDER.as_uri()
 
     # HTML
-    template = env.get_template("report/report.html")
+    template = env.get_template("report.html")
     template_rendered = template.render(
         Membership=Membership,
         PositionRank=PositionRank,

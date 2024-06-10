@@ -5,26 +5,36 @@ from pathlib import Path
 import logging
 import json
 import os
+import sys
 import pandas as pd
 
 import threading
 from tkinter import *
 from tkinter import ttk
 
-
 logger = logging.getLogger("TablerWordYearbook")
 
-MODULE_PATH = Path(__file__).parent
-OUTPUT_FOLDER = Path(MODULE_PATH, "output")
+# determine if application is a script file or frozen exe
+if getattr(sys, "frozen", False):
+    APPLICATION_PATH = Path(sys.executable).parent
+else:
+    APPLICATION_PATH = Path(__file__).parent
 
-FILE_CONTACTS_JSON = Path(OUTPUT_FOLDER, "data_contacts.json")
-FILE_CONTACTS_EXCEL = Path(OUTPUT_FOLDER, "data_contacts.xlsx")
-FILE_CONTACTS_EXCEL_DIRTY = Path(OUTPUT_FOLDER, "data_contacts_dirty.xlsx")
 
-FILE_MANUAL_CONTACTS_EXCEL = "manual_contacts.xlsx"
+OUTPUT_FOLDER = APPLICATION_PATH / "output"
+
+FILE_CONTACTS_JSON = APPLICATION_PATH / "output" / "data_contacts.json"
+FILE_CONTACTS_EXCEL = APPLICATION_PATH / "output" / "data_contacts.xlsx"
+FILE_CONTACTS_EXCEL_DIRTY = APPLICATION_PATH / "output" / "data_contacts_dirty.xlsx"
+
+FILE_MANUAL_CONTACTS_EXCEL = APPLICATION_PATH / "manual_contacts.xlsx"
 
 
 def execute(DOWNLOAD_CONTACTS, CONTACTS_CLEAN, CONTACTS_EXPORT_XLSX, DOWNLOAD_PROFILE_PICTURES, GENERATE_REPORT):
+    # Create the directory if it doesn't exist
+    OUTPUT_FOLDER.mkdir(parents=True, exist_ok=True)
+    logger.info(f"Directory '{OUTPUT_FOLDER}' has been created or already exists.")
+
     if not os.path.isfile(FILE_CONTACTS_JSON) or DOWNLOAD_CONTACTS:
         contacts = tablerworld.download.contacts()
         with open(FILE_CONTACTS_JSON, "w") as file_contacts:
