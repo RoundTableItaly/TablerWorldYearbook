@@ -2,6 +2,12 @@
 
 TablerWorldYearbook
 
+![Screenshot](docs/screenshot-01.png "Screenshot")
+
+## How to use
+
+Download the latest release and install the dependencies for [WeasyPrint for Windows](https://doc.courtbouillon.org/weasyprint/stable/first_steps.html#windows).
+
 ## Install
 
     pipenv install

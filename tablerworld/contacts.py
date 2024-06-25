@@ -368,6 +368,24 @@ def clean(df, df_manual_contacts):
 
         return is_honorary_member_for_year_national
 
+    def is_in_yearbook(df):
+        # No membership equals not in yearbook
+        no_membership = (
+            0
+            + df["is_member"]
+            + df["is_member_over_25"]
+            + df["is_member_under_25"]
+            + df["is_past_member"]
+            + df["is_honorary_member_for_life_club"]
+            + df["is_honorary_member_for_year_club"]
+            + df["is_honorary_member_for_life_national"]
+            + df["is_honorary_member_for_year_national"]
+            + df["is_honorary_member_in_memoriam_club"]
+            + df["is_great_friend"]
+        ) == 0
+
+        return not no_membership
+
     def has_membership_errors(df):
         age = df["is_member_over_25"] and df["is_member_under_25"]
         double_status_club = (
@@ -381,7 +399,7 @@ def clean(df, df_manual_contacts):
         member_and_past_member = df["is_member"] and df["is_past_member"]
         member_status = (not df["is_member"]) and (df["is_member_over_25"] or df["is_member_under_25"])
 
-        return member_and_past_member or age or double_status_club and member_status
+        return member_and_past_member or age or (double_status_club and member_status)
 
     # Merge manual contacts
     df_manual_contacts = pd.merge(
@@ -475,6 +493,7 @@ def clean(df, df_manual_contacts):
     df["is_honorary_member_for_life_national"] = df.apply(is_honorary_member_for_life_national, axis=1)
     df["is_honorary_member_for_year_club"] = df.apply(is_honorary_member_for_year_club, axis=1)
     df["is_honorary_member_for_year_national"] = df.apply(is_honorary_member_for_year_national, axis=1)
+    df["is_in_yearbook"] = df.apply(is_in_yearbook, axis=1)
     df["has_membership_errors"] = df.apply(has_membership_errors, axis=1)
 
     # Reorder columns

@@ -33,7 +33,6 @@ FILE_MANUAL_CONTACTS_EXCEL = APPLICATION_PATH / "manual_contacts.xlsx"
 def execute(DOWNLOAD_CONTACTS, CONTACTS_CLEAN, CONTACTS_EXPORT_XLSX, DOWNLOAD_PROFILE_PICTURES, GENERATE_REPORT):
     # Create the directory if it doesn't exist
     OUTPUT_FOLDER.mkdir(parents=True, exist_ok=True)
-    logger.info(f"Directory '{OUTPUT_FOLDER}' has been created or already exists.")
 
     if not os.path.isfile(FILE_CONTACTS_JSON) or DOWNLOAD_CONTACTS:
         contacts = tablerworld.download.contacts()
