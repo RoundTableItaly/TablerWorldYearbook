@@ -439,7 +439,7 @@ def clean(df, df_manual_contacts):
     df.reset_index(inplace=True, drop=True)
 
     # Replace nan values
-    df.fillna({"is_great_friend": False}, inplace=True)
+    df = df.infer_objects(copy=False)
     df = df.replace({np.nan: None})
 
     # Clean dirty rows
