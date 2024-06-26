@@ -168,10 +168,14 @@
                 <!-- -->{{ m_national_tabler("R.S.O.", "rso@roundtable.it", "rso@pecroundtable.it", get_tabler_local_national_pos("Board Assistants / R.S.O.")) }}
 
                 <h5 id="collegio-probiviri">Collegio dei Probiviri</h5>
-                <p><strong>GESTITO MANUALMENTE DALL'EDITORE NAZIONALE</strong></p>
+                <!-- -->{{ m_national_tabler("Presidente", "presidente.probiviri@roundtable.it", "presidente.probiviri@pecroundtable.it", get_tabler_local_national_pos("Board Assistants / Presidente del collegio dei Probiviri")) }}
+                <!-- -->{% for proboviro in get_tablers_local_national_pos("Board Assistants / Proboviro") %}{{ m_national_tabler("Proboviro", "", "", proboviro) }}{% endfor %}
+                <!-- -->{{ m_national_tabler("Proboviro supplente", "", "", get_tabler_local_national_pos("Board Assistants / Proboviro supplente")) }}
 
                 <h5 id="collegio-revisori">Collegio dei revisori dei conti</h5>
-                <p><strong>GESTITO MANUALMENTE DALL'EDITORE NAZIONALE</strong></p>
+                <!-- -->{{ m_national_tabler("Presidente", "presidente.revisori@roundtable.it", "presidente.revisorideiconti@pecroundtable.it", get_tabler_local_national_pos("Board Assistants / Presidente del collegio dei Revisori dei conti")) }}
+                <!-- -->{% for revisore in get_tablers_local_national_pos("Board Assistants / Revisore") %}{{ m_national_tabler("Revisore", "", "", revisore) }} {% endfor %}
+                <!-- -->{% for revisore_supplente in get_tablers_local_national_pos("Board Assistants / Revisore supplente") %}{{ m_national_tabler("Revisore supplente", "", "", revisore_supplente) }}{% endfor %}
             </section>
 
             {% for area in clubs_in_areas %}

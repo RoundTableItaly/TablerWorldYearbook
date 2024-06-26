@@ -62,7 +62,7 @@ def report(df):
         is_present = False
 
         for x in cell:
-            if position in x.get("position"):
+            if x.get("position") == position:
                 is_present = True
 
         return is_present
@@ -99,6 +99,12 @@ def report(df):
         t = tablers.head(1).to_dict(orient="records")
 
         return t[0] if len(t) > 0 else None
+
+    def get_tablers_local_national_pos(position):
+        tablers = df.loc[df["rt_local_positions"].apply(is_position_present_in_list, args=(position,))]
+        t = tablers.to_dict(orient="records")
+
+        return t
 
     def get_tablers(positionrank, value, membership):
         match positionrank:
@@ -139,6 +145,7 @@ def report(df):
         get_tabler_area_pos=get_tabler_area_pos,
         get_tabler_national_pos=get_tabler_national_pos,
         get_tabler_local_national_pos=get_tabler_local_national_pos,
+        get_tablers_local_national_pos=get_tablers_local_national_pos,
         get_tablers=get_tablers,
         dt_string=datetime.now().strftime("%Y/%m/%d %H:%M:%S"),
     )
