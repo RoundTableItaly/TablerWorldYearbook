@@ -94,6 +94,12 @@ def report(df):
 
         return t[0] if len(t) > 0 else None
 
+    def get_tabler_local_national_pos(position):
+        tablers = df.loc[df["rt_local_positions"].apply(is_position_present_in_list, args=(position,))]
+        t = tablers.head(1).to_dict(orient="records")
+
+        return t[0] if len(t) > 0 else None
+
     def get_tablers(positionrank, value, membership):
         match positionrank:
             case PositionRank.CLUB:
@@ -132,6 +138,7 @@ def report(df):
         get_tablers_club_pos=get_tablers_club_pos,
         get_tabler_area_pos=get_tabler_area_pos,
         get_tabler_national_pos=get_tabler_national_pos,
+        get_tabler_local_national_pos=get_tabler_local_national_pos,
         get_tablers=get_tablers,
         dt_string=datetime.now().strftime("%Y/%m/%d %H:%M:%S"),
     )

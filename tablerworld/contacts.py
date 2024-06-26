@@ -181,6 +181,20 @@ def clean(df, df_manual_contacts):
 
         return res
 
+    def rt_local_positions(cell):
+        if not cell or not isinstance(cell, list):
+            return []
+
+        res = []
+
+        for x in cell:
+            short_description = x.get("combination").get("short_description")
+            position = short_description
+            x["position"] = position
+            res.append(x)
+
+        return res
+
     def is_member(df):
         honorary_member = (
             is_honorary_member_in_memoriam_club(df)
@@ -479,6 +493,8 @@ def clean(df, df_manual_contacts):
     df["name_partner"] = df["custom_fields"].apply(name_partner)
 
     df["rt_local_positions"] = df["rt_local_positions"].apply(rt_positions_current)
+    df["rt_local_positions"] = df["rt_local_positions"].apply(rt_local_positions)
+
     df["rt_global_positions"] = df["rt_global_positions"].apply(rt_positions_current)
     df["rt_global_positions_national"] = df["rt_global_positions"].apply(rt_global_positions, args=(PositionRank.NATIONAL,))
     df["rt_global_positions_area"] = df["rt_global_positions"].apply(rt_global_positions, args=(PositionRank.AREA,))
