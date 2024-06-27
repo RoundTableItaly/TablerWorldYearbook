@@ -73,7 +73,7 @@ def contacts():
 
 
 def profile_pictures(df):
-    logger.info("Profile pictures download STARTED\n")
+    logger.info("Profile pictures download STARTED")
     # Prepare folder
     shutil.rmtree(PROFILE_PICS_FOLDER, ignore_errors=True)
     os.makedirs(PROFILE_PICS_FOLDER, exist_ok=True)

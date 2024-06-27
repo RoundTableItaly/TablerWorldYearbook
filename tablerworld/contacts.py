@@ -415,16 +415,18 @@ def clean(df, df_manual_contacts):
 
         return member_and_past_member or age or (double_status_club and member_status)
 
-    # Merge manual contacts
+    # Merge contact data into manual contacts
     df_manual_contacts = pd.merge(
         df_manual_contacts,
         df[
             [
                 "uname",
+                "rt_status",
                 "birth_date",
                 "email",
                 "phonenumbers",
                 "profile_pic",
+                "is_deceased",
                 "rt_global_positions",
                 "rt_local_positions",
                 "address",
@@ -435,6 +437,8 @@ def clean(df, df_manual_contacts):
         how="left",
         on="uname",
     )
+
+    # Merge club and area fields into manual contacts
     df_manual_contacts = pd.merge(
         df_manual_contacts,
         df[
@@ -453,7 +457,8 @@ def clean(df, df_manual_contacts):
     df.reset_index(inplace=True, drop=True)
 
     # Replace nan values
-    df = df.infer_objects(copy=False)
+    df["is_great_friend"] = df["is_great_friend"].apply(lambda x: False if pd.isna(x) else x)
+
     df = df.replace({np.nan: None})
 
     # Clean dirty rows
@@ -516,6 +521,7 @@ def clean(df, df_manual_contacts):
     df["is_honorary_member_for_life_club"] = df.pop("is_honorary_member_for_life_club")
     df["is_great_friend"] = df.pop("is_great_friend")
     df["is_manual_contact"] = df.pop("is_manual_contact")
+    df["is_in_yearbook"] = df.pop("is_in_yearbook")
     df["has_membership_errors"] = df.pop("has_membership_errors")
 
     logger.info("Contacts clean ENDED")
