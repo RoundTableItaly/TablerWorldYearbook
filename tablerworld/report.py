@@ -70,6 +70,7 @@ def report(df):
     def get_tablers_club_pos(club_number, position, is_deceased=False, hmfl=False, hmfy=False):
         tablers = df.loc[
             (df["rt_club_number"] == club_number)
+            & (df["is_manual_contact"] == False)
             & (
                 df["rt_global_positions_club"].apply(is_position_present_in_list, args=(position,))
                 & (df["is_deceased"] == is_deceased)
