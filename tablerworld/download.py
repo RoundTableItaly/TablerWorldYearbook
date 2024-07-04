@@ -95,9 +95,9 @@ def profile_pictures(df):
                 # print(LINE_UP, end=LINE_CLEAR)
                 logger.info(f"Download profile_pic {pic_id}")
 
-                r = requests.get(item["profile_pic"])
-                with open(PurePath.joinpath(PROFILE_PICS_FOLDER, pic_id), "wb") as f:
-                    f.write(r.content)
+                with requests.get(item["profile_pic"]) as r:
+                    with open(PurePath.joinpath(PROFILE_PICS_FOLDER, pic_id), "wb") as f:
+                        f.write(r.content)
 
             except Exception:
                 logger.info(traceback.format_exc())
