@@ -64,7 +64,7 @@
                 {% if row.job is not none %}{{ row.job }}{% else %}<strong class="red">Professione</strong>{% endif %}<br />
                 {% if row.address is not none %}{{ row.address }}{% else %}<strong class="red">Indirizzo</strong>{% endif %}<br />
                 {% if row.phonenumbers is not none %} <strong>{{ row.phonenumbers }}</strong>{% else %}<strong class="red">Telefono</strong>{% endif %}<br />
-                {% if row.email is not none %}{{ row.email }}{% else %}<strong class="red">E-mail</strong>{% endif %}<br />
+                {% if row.email %}{{ row.email }}{% else %}<strong class="red">E-mail</strong>{% endif %}<br />
             </div>
             {% endif %}
             <div class="tabler-notes">
