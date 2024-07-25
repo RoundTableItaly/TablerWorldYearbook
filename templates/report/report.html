@@ -228,16 +228,16 @@
                     <div class="club-item">
                         <h5>CONSIGLIO DIRETTIVO DI TAVOLA</h5>
                         <p>
-                            {% for tabler in get_tablers_club_pos(club.rt_club_number, "Board / President") %}{{ tabler.first_name }} {{ tabler.last_name }}{% if not loop.last %}, {% endif %} {% endfor %} (P)<br />
-                            {% for tabler in get_tablers_club_pos(club.rt_club_number, "Board / Vice-President") %}{{ tabler.first_name }} {{ tabler.last_name }}{% if not loop.last %}, {% endif %}{% endfor %} (VP)<br />
-                            {% for tabler in get_tablers_club_pos(club.rt_club_number, "Board / Past-President") %}{{ tabler.first_name }} {{ tabler.last_name }}{% if not loop.last %}, {% endif %}{% endfor %} (PP)<br />
-                            {% for tabler in get_tablers_club_pos(club.rt_club_number, "Board Assistants / C.S.O.") %}{{ tabler.first_name }} {{ tabler.last_name }}{% if not loop.last %}, {% endif %}{% endfor %} (CONS)<br />
-                            {% for tabler in get_tablers_club_pos(club.rt_club_number, "Board / I.R.O.") %}{{ tabler.first_name }} {{ tabler.last_name }}{% if not loop.last %}, {% endif %}{% endfor %} (C)<br />
-                            {% for tabler in get_tablers_club_pos(club.rt_club_number, "Board / Treasurer") %}{{ tabler.first_name }} {{ tabler.last_name }}{% if not loop.last %}, {% endif %}{% endfor %} (T)<br />
-                            {% for tabler in get_tablers_club_pos(club.rt_club_number, "Board / Secretary") %}{{ tabler.first_name }} {{ tabler.last_name }}{% if not loop.last %}, {% endif %}{% endfor %} (S)<br />
+                            {% for tabler in get_tablers_club_pos(club.rt_club_number, "Board / President") %}{{ tabler.first_name }} {{ tabler.last_name|upper }}{% if not loop.last %}, {% endif %} {% endfor %} (P)<br />
+                            {% for tabler in get_tablers_club_pos(club.rt_club_number, "Board / Vice-President") %}{{ tabler.first_name }} {{ tabler.last_name|upper }}{% if not loop.last %}, {% endif %}{% endfor %} (VP)<br />
+                            {% for tabler in get_tablers_club_pos(club.rt_club_number, "Board / Past-President") %}{{ tabler.first_name }} {{ tabler.last_name|upper }}{% if not loop.last %}, {% endif %}{% endfor %} (PP)<br />
+                            {% for tabler in get_tablers_club_pos(club.rt_club_number, ["Board / C.S.O.", "Board Assistants / C.S.O."]) %}{{ tabler.first_name }} {{ tabler.last_name|upper }}{% if not loop.last %}, {% endif %}{% endfor %} (CONS)<br />
+                            {% for tabler in get_tablers_club_pos(club.rt_club_number, "Board / I.R.O.") %}{{ tabler.first_name }} {{ tabler.last_name|upper }}{% if not loop.last %}, {% endif %}{% endfor %} (C)<br />
+                            {% for tabler in get_tablers_club_pos(club.rt_club_number, "Board / Treasurer") %}{{ tabler.first_name }} {{ tabler.last_name|upper }}{% if not loop.last %}, {% endif %}{% endfor %} (T)<br />
+                            {% for tabler in get_tablers_club_pos(club.rt_club_number, "Board / Secretary") %}{{ tabler.first_name }} {{ tabler.last_name|upper }}{% if not loop.last %}, {% endif %}{% endfor %} (S)<br />
                             <strong>COMUNICATO DA PRESIDENTE DI TAVOLA</strong> (CER)<br />
                             <strong>COMUNICATO DA PRESIDENTE DI TAVOLA</strong> (GM)<br />
-                            {% for tabler in get_tablers_club_pos(club.rt_club_number, "Board Assistants / Webmaster") %}{{ tabler.first_name }} {{ tabler.last_name }}{% if not loop.last %}, {% endif %}{% endfor %} (WM)<br />
+                            {% for tabler in get_tablers_club_pos(club.rt_club_number, "Board Assistants / Webmaster") %}{{ tabler.first_name }} {{ tabler.last_name|upper }}{% if not loop.last %}, {% endif %}{% endfor %} (WM)<br />
                         </p>
                     </div>
                 </div>

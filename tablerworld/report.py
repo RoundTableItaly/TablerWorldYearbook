@@ -62,10 +62,17 @@ def report(df):
         is_present = False
 
         for x in cell:
-            if x.get("position") == position:
-                is_present = True
+            if isinstance(position, list):
+                if x.get("position") in position:
+                    is_present = True
+                    break  # Puoi interrompere il ciclo una volta trovato
+            else:
+                if x.get("position") == position:
+                    is_present = True
+                    break  # Puoi interrompere il ciclo una volta trovato
 
         return is_present
+
 
     def get_tablers_club_pos(club_number, position, is_deceased=False, hmfl=False, hmfy=False):
         tablers = df.loc[
